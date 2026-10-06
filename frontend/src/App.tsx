@@ -6,7 +6,7 @@ import { Footer } from '@/components/common/Footer';
 import { DentinhoTip, type DentinhoVariant } from '@/components/common/DentinhoTip';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { CartDrawer } from '@/components/cart/CartDrawer';
-import { CheckoutModal } from '@/components/checkout/CheckoutModal';
+import { CheckoutPage } from '@/components/checkout/CheckoutPage';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useAuthStore } from '@/store/authStore';
@@ -24,13 +24,13 @@ export const AppContent: React.FC = () => {
   const { user, isAuthenticated, simulateLoginAsDonaMarta, simulateLoginAsPedro, logout } = useAuthStore();
   const { isOpen, openCart, getTotalItems, getSubtotal } = useCartStore();
 
+  const [currentView, setCurrentView] = useState<'store' | 'checkout'>('store');
   const [activeCategory, setActiveCategory] = useState<ProductCategory | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [activeDentinhoPose, setActiveDentinhoPose] = useState<DentinhoVariant>('ola');
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const handleOpenLogin = () => {
     setAuthModalTab('login');
@@ -46,6 +46,22 @@ export const AppContent: React.FC = () => {
     setFeedbackMsg(msg);
     setTimeout(() => setFeedbackMsg(null), 3000);
   };
+
+  // Se o usuário estiver no Checkout, renderiza a Visão Dedicada de Supermercado
+  if (currentView === 'checkout') {
+    return (
+      <div className="min-h-screen flex flex-col bg-mateus-surface text-slate-800 antialiased selection:bg-mateus-red selection:text-white">
+        {/* Barra de Acessibilidade mantida para a Dona Marta */}
+        <A11yBar />
+        <CheckoutPage
+          onBackToStore={() => {
+            setCurrentView('store');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-mateus-surface text-slate-800 antialiased selection:bg-mateus-red selection:text-white">
@@ -76,12 +92,11 @@ export const AppContent: React.FC = () => {
       </div>
 
       {/* Modal Lateral / Drawer Deslizante da Cesta (Fase 4) */}
-      <CartDrawer onProceedToCheckout={() => setIsCheckoutOpen(true)} />
-
-      {/* Modal de Checkout & Simulador de Gateway Real (Fase 5) */}
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
+      <CartDrawer
+        onProceedToCheckout={() => {
+          setCurrentView('checkout');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
       />
 
       {/* Modal de Autenticação Humanizada (Fase 2) */}
