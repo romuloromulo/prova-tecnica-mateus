@@ -5,6 +5,7 @@ import { Navbar } from '@/components/common/Navbar';
 import { Footer } from '@/components/common/Footer';
 import { DentinhoTip, type DentinhoVariant } from '@/components/common/DentinhoTip';
 import { AuthModal } from '@/components/auth/AuthModal';
+import { CartDrawer } from '@/components/cart/CartDrawer';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useAuthStore } from '@/store/authStore';
@@ -13,17 +14,14 @@ import type { ProductCategory } from '@/types/product';
 import {
   Sparkles,
   Heart,
-  Plus,
-  Minus,
-  Trash2,
-  ShoppingBag,
+  ShoppingCart,
   UserCheck,
   BookOpen
 } from 'lucide-react';
 
 export const AppContent: React.FC = () => {
   const { user, isAuthenticated, simulateLoginAsDonaMarta, simulateLoginAsPedro, logout } = useAuthStore();
-  const { items, removeItem, updateQuantity, getTotalItems, getSubtotal } = useCartStore();
+  const { isOpen, openCart, getTotalItems, getSubtotal } = useCartStore();
 
   const [activeCategory, setActiveCategory] = useState<ProductCategory | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -47,10 +45,6 @@ export const AppContent: React.FC = () => {
     setTimeout(() => setFeedbackMsg(null), 3000);
   };
 
-  const validCartItems = items.filter(
-    (item) => item && item.product && item.product.id && typeof item.product.price === 'number'
-  );
-
   return (
     <div className="min-h-screen flex flex-col bg-mateus-surface text-slate-800 antialiased selection:bg-mateus-red selection:text-white">
       {/* 1. Barra de Acessibilidade (Dona Marta) */}
@@ -63,6 +57,7 @@ export const AppContent: React.FC = () => {
           userName={user?.name}
           caderninhoLimit={user?.caderninhoLimit}
           onOpenAuth={handleOpenLogin}
+          onOpenCart={openCart}
           onLogout={logout}
           onSearchChange={setSearchTerm}
         />
@@ -77,6 +72,9 @@ export const AppContent: React.FC = () => {
           }}
         />
       </div>
+
+      {/* Modal Lateral / Drawer Deslizante da Cesta (Fase 4) */}
+      <CartDrawer />
 
       {/* Modal de Autenticação Humanizada (Fase 2) */}
       <AuthModal
@@ -265,68 +263,30 @@ export const AppContent: React.FC = () => {
           onAddedFeedback={handleFeedback}
         />
 
-        {/* Resumo da Cesta Atual (Zustand Store) */}
-        {validCartItems.length > 0 && (
-          <section
-            aria-label="Resumo da Cesta Atual"
-            className="bg-white rounded-3xl p-5 sm:p-7 border-2 border-mateus-sky-200 shadow-dentinho"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2.5 font-black text-base sm:text-lg text-mateus-blue">
-                <ShoppingBag className="text-mateus-red" />
-                <span>Sua Cesta Atual ({getTotalItems()} {getTotalItems() === 1 ? 'item' : 'itens'})</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-lg sm:text-xl font-black text-mateus-blue">
-                  Total: R$ {getSubtotal().toFixed(2).replace('.', ',')}
-                </span>
-              </div>
-            </div>
-
-            <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto pr-1">
-              {validCartItems.map(({ product, quantity }) => (
-                <div key={product.id} className="py-3 flex items-center justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="font-extrabold text-xs sm:text-sm text-slate-800 truncate">{product.name}</p>
-                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
-                      R$ {product.price.toFixed(2).replace('.', ',')} cada • Subtotal: R$ {(product.price * quantity).toFixed(2).replace('.', ',')}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => updateQuantity(product.id, quantity - 1)}
-                      aria-label="Diminuir quantidade"
-                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black flex items-center justify-center transition shadow-xs"
-                    >
-                      <Minus size={14} />
-                    </button>
-                    <span className="w-5 text-center text-xs sm:text-sm font-extrabold">{quantity}</span>
-                    <button
-                      type="button"
-                      onClick={() => updateQuantity(product.id, quantity + 1)}
-                      disabled={quantity >= product.stockQuantity}
-                      aria-label="Aumentar quantidade"
-                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-mateus-blue text-white font-black flex items-center justify-center transition hover:bg-mateus-blue-700 shadow-xs disabled:opacity-40"
-                    >
-                      <Plus size={14} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => removeItem(product.id)}
-                      className="p-1.5 text-slate-400 hover:text-mateus-red transition ml-1"
-                      title="Remover produto da cesta"
-                    >
-                      <Trash2 size={15} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
       </main>
+
+      {/* Botão Flutuante Rápido da Cesta (Acesso instantâneo em qualquer ponto da página) */}
+      {getTotalItems() > 0 && !isOpen && (
+        <aside
+          aria-label="Acesso rápido à cesta de compras"
+          className="fixed bottom-5 right-4 sm:right-6 z-30 animate-in fade-in slide-in-from-bottom-4 duration-300"
+        >
+          <button
+            type="button"
+            onClick={openCart}
+            aria-label={`Abrir cesta com ${getTotalItems()} itens no valor de R$ ${getSubtotal().toFixed(2).replace('.', ',')}`}
+            className="flex items-center gap-3 px-4 sm:px-5 py-3 rounded-full bg-mateus-red hover:bg-mateus-red-hover text-white font-black text-xs sm:text-sm shadow-2xl border-2 border-white transform hover:scale-105 active:scale-95 transition cursor-pointer"
+          >
+            <div className="relative">
+              <ShoppingCart size={20} />
+              <span className="absolute -top-2.5 -right-2.5 min-w-[18px] h-[18px] px-1 rounded-full bg-white text-mateus-red text-[10px] font-black flex items-center justify-center shadow">
+                {getTotalItems()}
+              </span>
+            </div>
+            <span>Ver Cesta • R$ {getSubtotal().toFixed(2).replace('.', ',')}</span>
+          </button>
+        </aside>
+      )}
 
       {/* 5. Rodapé com Tradição e Suporte Humanizado */}
       <Footer />

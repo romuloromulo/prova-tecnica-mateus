@@ -8,44 +8,44 @@ import { Sparkles, RefreshCcw, Filter, X } from 'lucide-react';
 interface ProductGridProps {
   selectedCategory?: ProductCategory | 'all';
   onCategoryChange?: (cat: ProductCategory | 'all') => void;
-  onAddedFeedback?: (message: string) => void;
   searchTerm?: string;
   onClearSearch?: () => void;
+  onAddedFeedback?: (message: string) => void;
 }
 
 const sectorTitles: Record<ProductCategory | 'all', { title: string; desc: string }> = {
   all: {
-    title: 'Todos os Setores',
-    desc: 'O supermercado completo com a tradição de preço justo e confiança do Grupo Mateus.',
+    title: 'Catálogo Completo do Supermercado',
+    desc: 'Todos os setores reunidos com a tradição e o melhor preço do Grupo Mateus.',
   },
   hortifruti: {
-    title: 'Hortifrúti & Frutas Frescas',
-    desc: 'Colhidos diariamente do campo com a máxima qualidade e frescor.',
+    title: 'Setor de Hortifrúti & Frutas Frescas',
+    desc: 'Colhidos diariamente do campo direto para a mesa da sua família.',
   },
   acougue: {
     title: 'Açougue & Carnes de Primeira',
-    desc: 'Cortes nobres, carnes macias e inspecionadas no balcão do Seu Osvaldo.',
+    desc: 'Cortes nobres, selecionados com rigor e inspecionados para sua segurança.',
   },
   padaria: {
     title: 'Padaria Fresquinha & Confeitaria',
-    desc: 'Pães quentinhos saindo do forno a toda hora e bolos caseiros tradicionais.',
+    desc: 'Pães quentinhos saindo do forno a toda hora e receitas tradicionais de 1987.',
   },
   mercearia: {
     title: 'Mercearia Básica do Seu Osvaldo',
-    desc: 'Arroz, feijão, café moído e itens essenciais que nunca podem faltar.',
+    desc: 'Arroz, feijão, café moído e tudo o que não pode faltar na despensa.',
   },
   limpeza: {
-    title: 'Higiene & Limpeza da Casa',
-    desc: 'Produtos de alta eficiência para manter sua casa perfumada e protegida.',
+    title: 'Setor de Higiene & Limpeza',
+    desc: 'Produtos de alta eficiência para deixar sua casa protegida e perfumada.',
   },
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
   selectedCategory = 'all',
   onCategoryChange,
-  onAddedFeedback,
   searchTerm = '',
   onClearSearch,
+  onAddedFeedback,
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,7 +57,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     pageSize: 8,
   });
 
-  // Reseta para a primeira página ao mudar setor ou termo de busca
+  // Reseta para a primeira página ao alterar categoria ou termo de busca
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory, searchTerm]);
@@ -104,6 +104,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const sectorInfo = sectorTitles[selectedCategory] || sectorTitles.all;
   const products = Array.isArray(data?.content) ? data.content : [];
 
+  const handleResetFilters = () => {
+    onCategoryChange?.('all');
+    onClearSearch?.();
+    setCurrentPage(1);
+  };
+
   return (
     <section id="catalogo-produtos" aria-labelledby="catalog-heading" className="scroll-mt-32 space-y-6">
       {/* Cabeçalho do Setor Ativo & Filtros Aplicados */}
@@ -142,7 +148,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                     type="button"
                     onClick={() => onCategoryChange?.('all')}
                     aria-label="Remover filtro de setor"
-                    className="hover:text-mateus-red p-0.5 rounded-full"
+                    className="hover:text-mateus-red p-0.5 rounded-full cursor-pointer"
                   >
                     <X size={12} />
                   </button>
@@ -156,7 +162,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                     type="button"
                     onClick={() => onClearSearch?.()}
                     aria-label="Limpar termo de busca"
-                    className="hover:text-mateus-red p-0.5 rounded-full"
+                    className="hover:text-mateus-red p-0.5 rounded-full cursor-pointer"
                   >
                     <X size={12} />
                   </button>
@@ -171,7 +177,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         </span>
       </div>
 
-      {/* Estados: Loading vs Vazio vs Grade de Produtos */}
+      {/* Estados: Loading vs Vazio vs Grade de Cards */}
       {loading ? (
         <div
           role="status"
@@ -195,9 +201,9 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           ))}
         </div>
       ) : products.length === 0 ? (
-        /* Estado Vazio Amigável */
+        /* Estado Vazio Amigável com Mascote Dentinho */
         <div className="bg-white rounded-3xl p-8 sm:p-12 border-2 border-dashed border-slate-200 text-center space-y-4 shadow-sm">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-3xl bg-mateus-sky-50 p-2 border border-mateus-sky-200 flex items-center justify-center shadow-dentinho">
+          <div className="w-24 h-24 mx-auto rounded-3xl bg-mateus-sky-50 p-2 border border-mateus-sky-200 flex items-center justify-center shadow-dentinho">
             <img
               src="/mascote/dentinho-ola.svg"
               alt="Mascote Dentinho com dúvida"
@@ -205,22 +211,19 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             />
           </div>
 
-          <div className="max-w-md mx-auto space-y-1.5">
-            <h3 className="text-lg sm:text-xl font-extrabold text-slate-800">
+          <div className="max-w-md mx-auto space-y-2">
+            <h3 className="text-xl font-extrabold text-slate-800">
               Ops, vizinho! Não encontramos nenhum produto.
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              O Seu Osvaldo e o Dentinho procuraram em todo o setor, mas não encontramos nada com o termo buscado. Que tal explorar outros setores da loja?
+              O Seu Osvaldo e o Dentinho procuraram no estoque, mas não achamos nada com os filtros aplicados. Tente buscar com outra palavra ou limpe os filtros!
             </p>
           </div>
 
           <button
             type="button"
-            onClick={() => {
-              onCategoryChange?.('all');
-              onClearSearch?.();
-            }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-mateus-blue hover:bg-mateus-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-soft transition"
+            onClick={handleResetFilters}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-mateus-blue hover:bg-mateus-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-soft transition cursor-pointer"
           >
             <RefreshCcw size={16} />
             <span>Ver Todos os Setores</span>
@@ -239,8 +242,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         </div>
       )}
 
-      {/* Paginação */}
-      {!loading && (data?.totalPages || 0) > 1 && (
+      {/* Barra de Paginação */}
+      {!loading && data.totalPages > 1 && (
         <PaginationBar
           currentPage={data.currentPage}
           totalPages={data.totalPages}

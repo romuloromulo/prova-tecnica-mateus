@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Product } from '../types/product';
 import type { CartItem } from '../types/cart';
+import { cartService } from '../services/cartService';
 
 interface CartState {
   items: CartItem[];
@@ -60,6 +61,7 @@ export const useCartStore = create<CartState>((set, get) => ({
       updated[existingIndex] = { ...existingItem, quantity: nextQuantity };
       saveCart(updated);
       set({ items: updated });
+      cartService.addItem(product.id, quantity).catch(() => {});
       return { success: true };
     }
 
@@ -73,6 +75,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     const updated = [...currentItems, { product, quantity }];
     saveCart(updated);
     set({ items: updated });
+    cartService.addItem(product.id, quantity).catch(() => {});
     return { success: true };
   },
 
@@ -80,6 +83,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     const updated = get().items.filter((i) => i.product.id !== productId);
     saveCart(updated);
     set({ items: updated });
+    cartService.removeItem(productId).catch(() => {});
   },
 
   updateQuantity: (productId: number | string, newQuantity: number) => {
@@ -101,12 +105,14 @@ export const useCartStore = create<CartState>((set, get) => ({
     );
     saveCart(updated);
     set({ items: updated });
+    cartService.updateQuantity(productId, newQuantity).catch(() => {});
     return true;
   },
 
   clearCart: () => {
     localStorage.removeItem('mateus_cart');
     set({ items: [] });
+    cartService.clearCart().catch(() => {});
   },
 
   openCart: () => set({ isOpen: true }),

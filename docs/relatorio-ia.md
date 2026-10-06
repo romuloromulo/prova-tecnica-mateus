@@ -52,6 +52,12 @@
 
 
 
+* **Fase 4 — Carrinho de Compras em Drawer Lateral Deslizante:**
+  * **Intervenção de UX do Desenvolvedor:** O desenvolvedor identificou que manter abas de categorias distantes do catálogo ou ter cabeçalhos redundantes prejudicava a usabilidade, especialmente com a altura do banner hero. Foi decidida a unificação do cabeçalho e abas em um container `sticky top-0 z-40` com rolagem suave (`scrollIntoView`) ao selecionar qualquer setor.
+  * **Drawer Lateral Moderno (`CartDrawer.tsx`):** Substituição da seção estática por um painel deslizante da direita para a esquerda com efeito *backdrop blur*, fecho por tecla ESC, travamento do scroll do body e suporte integral a navegação por teclado (WCAG 2.1 AA).
+  * **Resumo de Compra & Gamificação Positiva (`CartSummary.tsx`):** Criação de uma barra animada de progresso para Frete Grátis (*"Faltam R$ X para entrega grátis no seu bairro"*), indicador de cobertura do limite do Caderninho Digital para Dona Marta/Pedro, e botão flutuante de acesso rápido à cesta em qualquer ponto da rolagem.
+  * **Controle Rigoroso de Estoque (`CartItemRow.tsx`):** Limitador visual e desabilitação automática do botão `[+]` quando a quantidade atinge o estoque disponível no balcão, prevenindo que o usuário compre itens indisponíveis.
+  * **Sincronização Resiliente (`cartService.ts`):** Camada de serviço com chamadas assíncronas preparadas para a API REST do backend Spring Boot e fallback transparente para persistência local sanitizada no `localStorage`.
 
 ## 7. Reflexão Final
 *(Será preenchido na conclusão da entrega do front-end)*
