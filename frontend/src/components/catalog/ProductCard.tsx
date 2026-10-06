@@ -89,17 +89,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       {/* Preço e Botão de Ação */}
-      <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-        <div>
-          <span className="text-[11px] text-slate-400 font-semibold block uppercase tracking-wider">
+      <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between gap-2.5">
+        <div className="shrink-0 whitespace-nowrap">
+          <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold block uppercase tracking-wider">
             Preço Amigo
           </span>
-          <div className="flex items-baseline gap-1">
-            <span className="text-xl sm:text-2xl font-black text-mateus-blue">
-              R$ {product.price.toFixed(2).replace('.', ',')}
+          <div className="flex items-baseline gap-1 whitespace-nowrap">
+            <span className="text-xl sm:text-2xl font-black text-mateus-blue whitespace-nowrap inline-flex items-baseline">
+              <span className="text-xs sm:text-sm font-bold mr-0.5 select-none">R$</span>
+              <span>{product.price.toFixed(2).replace('.', ',')}</span>
             </span>
             {product.unit && (
-              <span className="text-xs text-slate-400 font-bold">
+              <span className="text-[11px] sm:text-xs text-slate-400 font-bold whitespace-nowrap">
                 /{product.unit}
               </span>
             )}

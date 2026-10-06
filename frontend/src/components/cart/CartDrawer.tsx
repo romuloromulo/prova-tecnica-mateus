@@ -25,10 +25,42 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
 
+  // Estados para controlar o ciclo de vida e a transição suave de entrada e saída
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    if (isOpen) {
+      setShouldRender(true);
+      // Pequeno atraso (25ms) garante que o elemento foi pintado no DOM com translate-x-full antes de iniciar o slide-in
+      timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 25);
+    } else {
+      setIsVisible(false);
+      // Aguarda os 300ms exatos da transição de slide-out antes de desmontar o componente
+      timer = setTimeout(() => {
+        setShouldRender(false);
+      }, 300);
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isOpen]);
+
   // Fecha com a tecla ESC e trava o scroll da página enquanto o drawer estiver aberto
   useEffect(() => {
+    if (shouldRender) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      setShowClearConfirm(false);
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === 'Escape' && shouldRender) {
         if (showClearConfirm) {
           setShowClearConfirm(false);
         } else {
@@ -37,21 +69,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
       }
     };
 
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    } else {
-      document.body.style.overflow = '';
-      setShowClearConfirm(false);
-    }
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, closeCart, showClearConfirm]);
+  }, [shouldRender, closeCart, showClearConfirm]);
 
-  if (!isOpen) return null;
+  if (!shouldRender) return null;
 
   const validItems = items.filter(
     (i) => i && i.product && i.product.id && typeof i.product.price === 'number'
@@ -81,18 +107,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
       aria-label="Cesta de compras"
       className="fixed inset-0 z-50 overflow-hidden"
     >
-      {/* Backdrop com desfoque e fade-in suave */}
+      {/* Backdrop com desfoque e transição suave de opacidade (fade in / fade out) */}
       <div
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-300 animate-in fade-in"
+        className={`fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-300 ease-in-out ${
+          isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
         onClick={closeCart}
         aria-hidden="true"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
-        {/* Painel Deslizante Moderno */}
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10 pointer-events-none">
+        {/* Painel Deslizante Moderno (slide in / slide out suave pela direita) */}
         <div
           ref={drawerRef}
-          className="w-screen max-w-md sm:max-w-lg bg-white shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out animate-in slide-in-from-right"
+          className={`w-screen max-w-md sm:max-w-lg bg-white shadow-2xl flex flex-col pointer-events-auto transform transition-transform duration-300 ease-in-out ${
+            isVisible ? 'translate-x-0' : 'translate-x-full'
+          }`}
         >
           {/* Cabeçalho do Drawer */}
           <div className="px-5 py-4 sm:px-6 bg-mateus-blue text-white flex items-center justify-between shadow-soft shrink-0">
