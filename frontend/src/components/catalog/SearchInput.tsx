@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, X } from 'lucide-react';
 
 interface SearchInputProps {
@@ -15,24 +15,26 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   debounceMs = 350,
 }) => {
   const [internalValue, setInternalValue] = useState(value);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
 
   useEffect(() => {
     setInternalValue(value);
   }, [value]);
 
   useEffect(() => {
+    if (internalValue === value) return;
+
     const handler = setTimeout(() => {
-      if (internalValue !== value) {
-        onChange(internalValue);
-      }
+      onChangeRef.current(internalValue);
     }, debounceMs);
 
     return () => clearTimeout(handler);
-  }, [internalValue, debounceMs, onChange, value]);
+  }, [internalValue, debounceMs, value]);
 
   const handleClear = () => {
     setInternalValue('');
-    onChange('');
+    onChangeRef.current('');
   };
 
   return (

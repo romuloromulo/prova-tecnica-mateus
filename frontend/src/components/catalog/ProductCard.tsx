@@ -14,10 +14,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const { items, addItem, updateQuantity } = useCartStore();
 
-  const cartItem = items.find((i) => i.product.id === product.id);
+  const cartItem = items.find((i) => i?.product?.id === product?.id);
   const currentQuantity = cartItem ? cartItem.quantity : 0;
-  const isOutOfStock = product.stockQuantity <= 0;
-  const isLowStock = product.stockQuantity > 0 && product.stockQuantity <= 5;
+  const isOutOfStock = (product?.stockQuantity ?? 0) <= 0;
+  const isLowStock = (product?.stockQuantity ?? 0) > 0 && (product?.stockQuantity ?? 0) <= 5;
 
   const handleAdd = () => {
     if (isOutOfStock) return;

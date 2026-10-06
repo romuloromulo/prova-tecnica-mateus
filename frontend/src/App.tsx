@@ -6,6 +6,7 @@ import { Footer } from '@/components/common/Footer';
 import { DentinhoTip, type DentinhoVariant } from '@/components/common/DentinhoTip';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
 import type { ProductCategory } from '@/types/product';
@@ -20,7 +21,7 @@ import {
   BookOpen
 } from 'lucide-react';
 
-export const App: React.FC = () => {
+export const AppContent: React.FC = () => {
   const { user, isAuthenticated, simulateLoginAsDonaMarta, simulateLoginAsPedro, logout } = useAuthStore();
   const { items, removeItem, updateQuantity, getTotalItems, getSubtotal } = useCartStore();
 
@@ -46,6 +47,10 @@ export const App: React.FC = () => {
     setTimeout(() => setFeedbackMsg(null), 3000);
   };
 
+  const validCartItems = items.filter(
+    (item) => item && item.product && item.product.id && typeof item.product.price === 'number'
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-mateus-surface text-slate-800 antialiased selection:bg-mateus-red selection:text-white">
       {/* 1. Barra de Acessibilidade (Dona Marta) */}
@@ -61,7 +66,7 @@ export const App: React.FC = () => {
         onSearchChange={setSearchTerm}
       />
 
-      {/* 3. Barra de Categorias */}
+      {/* 3. Barra Única de Categorias / Setores */}
       <Navbar
         activeCategory={activeCategory}
         onSelectCategory={(cat) => setActiveCategory(cat as ProductCategory | 'all')}
@@ -250,17 +255,17 @@ export const App: React.FC = () => {
           />
         </section>
 
-        {/* FASE 3: Catálogo Dinâmico por Setores com Paginação e Busca */}
+        {/* FASE 3: Catálogo Dinâmico por Setores com Paginação e Busca (Sem abas duplicadas) */}
         <ProductGrid
           selectedCategory={activeCategory}
           onCategoryChange={setActiveCategory}
           searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
+          onClearSearch={() => setSearchTerm('')}
           onAddedFeedback={handleFeedback}
         />
 
         {/* Resumo da Cesta Atual (Zustand Store) */}
-        {items.length > 0 && (
+        {validCartItems.length > 0 && (
           <section
             aria-label="Resumo da Cesta Atual"
             className="bg-white rounded-3xl p-5 sm:p-7 border-2 border-mateus-sky-200 shadow-dentinho"
@@ -278,7 +283,7 @@ export const App: React.FC = () => {
             </div>
 
             <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto pr-1">
-              {items.map(({ product, quantity }) => (
+              {validCartItems.map(({ product, quantity }) => (
                 <div key={product.id} className="py-3 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <p className="font-extrabold text-xs sm:text-sm text-slate-800 truncate">{product.name}</p>
@@ -325,6 +330,14 @@ export const App: React.FC = () => {
       {/* 5. Rodapé com Tradição e Suporte Humanizado */}
       <Footer />
     </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
   );
 };
 

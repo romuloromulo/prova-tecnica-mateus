@@ -22,7 +22,12 @@ const getStoredCart = (): CartItem[] => {
   const item = localStorage.getItem('mateus_cart');
   if (!item) return [];
   try {
-    return JSON.parse(item);
+    const parsed = JSON.parse(item);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (i): i is CartItem =>
+        Boolean(i && i.product && i.product.id && typeof i.product.price === 'number' && i.quantity > 0)
+    );
   } catch {
     return [];
   }
@@ -109,12 +114,12 @@ export const useCartStore = create<CartState>((set, get) => ({
   toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 
   getTotalItems: () => {
-    return get().items.reduce((acc, item) => acc + item.quantity, 0);
+    return get().items.reduce((acc, item) => acc + (item?.quantity || 0), 0);
   },
 
   getSubtotal: () => {
     return get().items.reduce(
-      (acc, item) => acc + item.product.price * item.quantity,
+      (acc, item) => acc + (item?.product?.price || 0) * (item?.quantity || 1),
       0
     );
   },

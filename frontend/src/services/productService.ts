@@ -236,8 +236,11 @@ export const productService = {
           size,
         },
       });
-      return response.data;
-    } catch (error) {
+      if (response.data && Array.isArray(response.data.content)) {
+        return response.data;
+      }
+      throw new Error('API não retornou a lista paginada esperada.');
+    } catch {
       // 2. Fallback local inteligente e instantâneo
       let filtered = [...MOCK_PRODUCTS];
 

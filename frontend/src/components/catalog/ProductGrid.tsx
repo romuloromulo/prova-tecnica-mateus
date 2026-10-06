@@ -1,62 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { ProductCard } from './ProductCard';
 import { PaginationBar } from './PaginationBar';
-import { SearchInput } from './SearchInput';
-import { CategoryTabs } from './CategoryTabs';
 import { productService } from '@/services/productService';
 import type { ProductCategory, PaginatedProducts } from '@/types/product';
-import { Sparkles, RefreshCcw } from 'lucide-react';
+import { Sparkles, RefreshCcw, Filter, X } from 'lucide-react';
 
 interface ProductGridProps {
-  initialCategory?: ProductCategory | 'all';
   selectedCategory?: ProductCategory | 'all';
   onCategoryChange?: (cat: ProductCategory | 'all') => void;
   onAddedFeedback?: (message: string) => void;
   searchTerm?: string;
-  onSearchChange?: (val: string) => void;
+  onClearSearch?: () => void;
 }
 
 const sectorTitles: Record<ProductCategory | 'all', { title: string; desc: string }> = {
   all: {
-    title: 'Catálogo Completo do Supermercado',
-    desc: 'Todos os setores reunidos com a tradição e o melhor preço do Grupo Mateus.',
+    title: 'Todos os Setores',
+    desc: 'O supermercado completo com a tradição de preço justo e confiança do Grupo Mateus.',
   },
   hortifruti: {
-    title: 'Setor de Hortifrúti & Frutas Frescas',
-    desc: 'Colhidos diariamente do campo direto para a mesa da sua família.',
+    title: 'Hortifrúti & Frutas Frescas',
+    desc: 'Colhidos diariamente do campo com a máxima qualidade e frescor.',
   },
   acougue: {
     title: 'Açougue & Carnes de Primeira',
-    desc: 'Cortes nobres, selecionados com rigor e inspecionados para sua segurança.',
+    desc: 'Cortes nobres, carnes macias e inspecionadas no balcão do Seu Osvaldo.',
   },
   padaria: {
     title: 'Padaria Fresquinha & Confeitaria',
-    desc: 'Pães quentinhos saindo do forno a toda hora e receitas tradicionais de 1987.',
+    desc: 'Pães quentinhos saindo do forno a toda hora e bolos caseiros tradicionais.',
   },
   mercearia: {
     title: 'Mercearia Básica do Seu Osvaldo',
-    desc: 'Arroz, feijão, café moído e tudo o que não pode faltar na despensa.',
+    desc: 'Arroz, feijão, café moído e itens essenciais que nunca podem faltar.',
   },
   limpeza: {
-    title: 'Setor de Higiene & Limpeza',
-    desc: 'Produtos de alta eficiência para deixar sua casa protegida e perfumada.',
+    title: 'Higiene & Limpeza da Casa',
+    desc: 'Produtos de alta eficiência para manter sua casa perfumada e protegida.',
   },
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
-  initialCategory = 'all',
-  selectedCategory,
+  selectedCategory = 'all',
   onCategoryChange,
   onAddedFeedback,
-  searchTerm: externalSearch = '',
-  onSearchChange: setExternalSearch,
+  searchTerm = '',
+  onClearSearch,
 }) => {
-  const [internalCategory, setInternalCategory] = useState<ProductCategory | 'all'>(
-    selectedCategory !== undefined ? selectedCategory : initialCategory
-  );
-  const category = selectedCategory !== undefined ? selectedCategory : internalCategory;
-
-  const [internalSearch, setInternalSearch] = useState<string>(externalSearch);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<PaginatedProducts>({
@@ -66,34 +56,37 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     currentPage: 1,
     pageSize: 8,
   });
-  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
 
-  // Sincroniza busca externa (do Header) se houver
+  // Reseta para a primeira página ao mudar setor ou termo de busca
   useEffect(() => {
-    setInternalSearch(externalSearch);
     setCurrentPage(1);
-  }, [externalSearch]);
+  }, [selectedCategory, searchTerm]);
 
-  // Carrega contagens de categorias
-  useEffect(() => {
-    productService.getCategoriesCount().then(setCategoryCounts);
-  }, []);
-
-  // Busca produtos da API / Mock
+  // Busca produtos da API com fallback robusto
   useEffect(() => {
     let isCancelled = false;
     setLoading(true);
 
     productService
       .getProducts({
-        category,
-        search: internalSearch,
+        category: selectedCategory,
+        search: searchTerm,
         page: currentPage,
         size: 8,
       })
       .then((res) => {
         if (!isCancelled) {
-          setData(res);
+          if (res && Array.isArray(res.content)) {
+            setData(res);
+          } else {
+            setData({
+              content: [],
+              totalElements: 0,
+              totalPages: 1,
+              currentPage: 1,
+              pageSize: 8,
+            });
+          }
           setLoading(false);
         }
       })
@@ -106,77 +99,79 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     return () => {
       isCancelled = true;
     };
-  }, [category, internalSearch, currentPage]);
+  }, [selectedCategory, searchTerm, currentPage]);
 
-  const handleCategorySelect = (newCategory: ProductCategory | 'all') => {
-    setInternalCategory(newCategory);
-    onCategoryChange?.(newCategory);
-    setCurrentPage(1);
-  };
-
-  const handleSearchChange = (val: string) => {
-    setInternalSearch(val);
-    setExternalSearch?.(val);
-    setCurrentPage(1);
-  };
-
-  const handleResetFilters = () => {
-    setInternalCategory('all');
-    onCategoryChange?.('all');
-    setInternalSearch('');
-    setExternalSearch?.('');
-    setCurrentPage(1);
-  };
-
-  const sectorInfo = sectorTitles[category];
+  const sectorInfo = sectorTitles[selectedCategory] || sectorTitles.all;
+  const products = Array.isArray(data?.content) ? data.content : [];
 
   return (
     <section aria-labelledby="catalog-heading" className="space-y-6">
-      {/* Abas de Setores do Supermercado */}
-      <div className="space-y-3">
-        <CategoryTabs
-          activeCategory={category}
-          onSelectCategory={handleCategorySelect}
-          categoryCounts={categoryCounts}
-        />
-
-        {/* Barra de Busca Dedicada com Debounce */}
-        <div className="max-w-xl">
-          <SearchInput
-            value={internalSearch}
-            onChange={handleSearchChange}
-            placeholder={`Buscar em ${category === 'all' ? 'todos os setores' : sectorInfo.title}...`}
-          />
-        </div>
-      </div>
-
-      {/* Cabeçalho do Setor Ativo */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pt-2">
+      {/* Cabeçalho do Setor Ativo & Filtros Aplicados */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-2 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-1.5 text-mateus-sky-600 text-xs font-black uppercase tracking-wider">
             <Sparkles size={14} />
             <span>Setor Ativo</span>
           </div>
+
           <h2 id="catalog-heading" className="text-2xl sm:text-3xl font-black text-mateus-blue-900 tracking-tight">
             {sectorInfo.title}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-            {internalSearch ? (
-              <>
-                Exibindo resultados para a busca: <strong className="text-mateus-blue">"{internalSearch}"</strong>
-              </>
+
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5 max-w-2xl">
+            {searchTerm ? (
+              <span>
+                Filtrando por: <strong className="text-mateus-blue">"{searchTerm}"</strong>
+              </span>
             ) : (
               sectorInfo.desc
             )}
           </p>
+
+          {/* Tags de Filtros Ativos com Botão de Limpar */}
+          {(selectedCategory !== 'all' || searchTerm) && (
+            <div className="flex flex-wrap items-center gap-2 mt-2.5">
+              <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                <Filter size={12} /> Filtros:
+              </span>
+
+              {selectedCategory !== 'all' && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-mateus-blue-50 text-mateus-blue border border-mateus-blue-200">
+                  <span>Setor: {sectorInfo.title}</span>
+                  <button
+                    type="button"
+                    onClick={() => onCategoryChange?.('all')}
+                    aria-label="Remover filtro de setor"
+                    className="hover:text-mateus-red p-0.5 rounded-full"
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              )}
+
+              {searchTerm && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                  <span>Busca: "{searchTerm}"</span>
+                  <button
+                    type="button"
+                    onClick={() => onClearSearch?.()}
+                    aria-label="Limpar termo de busca"
+                    className="hover:text-mateus-red p-0.5 rounded-full"
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
-        <span className="text-xs font-bold text-slate-500 shrink-0">
-          {loading ? 'Carregando itens...' : `${data.totalElements} produtos encontrados`}
+        <span className="text-xs font-bold text-slate-500 shrink-0 self-start sm:self-auto">
+          {loading ? 'Consultando prateleiras...' : `${data?.totalElements || 0} produtos encontrados`}
         </span>
       </div>
 
-      {/* Estados: Loading (Skeletons) vs Vazio vs Grade de Cards */}
+      {/* Estados: Loading vs Vazio vs Grade de Produtos */}
       {loading ? (
         <div
           role="status"
@@ -199,10 +194,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             </div>
           ))}
         </div>
-      ) : data.content.length === 0 ? (
-        /* Estado Vazio Amigável com Mascote Dentinho */
+      ) : products.length === 0 ? (
+        /* Estado Vazio Amigável */
         <div className="bg-white rounded-3xl p-8 sm:p-12 border-2 border-dashed border-slate-200 text-center space-y-4 shadow-sm">
-          <div className="w-24 h-24 mx-auto rounded-3xl bg-mateus-sky-50 p-2 border border-mateus-sky-200 flex items-center justify-center shadow-dentinho">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-3xl bg-mateus-sky-50 p-2 border border-mateus-sky-200 flex items-center justify-center shadow-dentinho">
             <img
               src="/mascote/dentinho-ola.svg"
               alt="Mascote Dentinho com dúvida"
@@ -210,18 +205,21 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             />
           </div>
 
-          <div className="max-w-md mx-auto space-y-2">
-            <h3 className="text-xl font-extrabold text-slate-800">
+          <div className="max-w-md mx-auto space-y-1.5">
+            <h3 className="text-lg sm:text-xl font-extrabold text-slate-800">
               Ops, vizinho! Não encontramos nenhum produto.
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              O Seu Osvaldo e o Dentinho procuraram na prateleira, mas não achamos nada com o termo digitado. Tente buscar com outra palavra ou limpe o filtro!
+              O Seu Osvaldo e o Dentinho procuraram em todo o setor, mas não encontramos nada com o termo buscado. Que tal explorar outros setores da loja?
             </p>
           </div>
 
           <button
             type="button"
-            onClick={handleResetFilters}
+            onClick={() => {
+              onCategoryChange?.('all');
+              onClearSearch?.();
+            }}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-mateus-blue hover:bg-mateus-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-soft transition"
           >
             <RefreshCcw size={16} />
@@ -231,7 +229,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
       ) : (
         /* Grade de Produtos */
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {data.content.map((product) => (
+          {products.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
@@ -241,8 +239,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         </div>
       )}
 
-      {/* Barra de Paginação */}
-      {!loading && data.totalPages > 1 && (
+      {/* Paginação */}
+      {!loading && (data?.totalPages || 0) > 1 && (
         <PaginationBar
           currentPage={data.currentPage}
           totalPages={data.totalPages}
