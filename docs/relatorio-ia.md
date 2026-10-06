@@ -39,6 +39,12 @@
   * **Problema com TypeScript 6 (`baseUrl` e `verbatimModuleSyntax`):** O TypeScript 6 apontou depreciação do parâmetro `baseUrl` no `tsconfig.app.json` e exigiu uso estrito de imports de tipos (`import type { ... }`).
   * **Ação Corretiva do Desenvolvedor:** O `tsconfig.app.json` foi modernizado para remover `baseUrl` mantendo `paths: { "@/*": ["./src/*"] }` e os imports de contratos (`Product`, `CartItem`, `DentinhoVariant`, `User`) foram ajustados para a sintaxe `import type`.
   * **Design & Acessibilidade WCAG 2.1 AA (Persona Dona Marta):** A IA gerou a barra de acessibilidade `A11yBar` e o hook `useA11y` permitindo controle granular do tamanho de fonte (`A-`, `Padrão`, `A+`) e modo de alto contraste para atender aos requisitos de visão e contraste da Dona Marta.
+* **Fase 2 — Autenticação & Cadastro Humanizado (Requisito IA):**
+  * **Remoção de Elementos de Debug:** O painel de demonstração de tokens visuais utilizado na Fase 1 foi removido da tela principal a pedido do desenvolvedor, tornando a aplicação 100% voltada ao consumidor final.
+  * **Validação Humanizada com Zod:** Em vez de mensagens genéricas em inglês (como *"Invalid email"* ou *"Too short"*), foram construídos schemas em Zod com linguagem afetuosa e didática, facilitando o entendimento de usuários idosos como a Dona Marta e eliminando atritos de formulário.
+  * **Modal de Autenticação com Abas e Acessibilidade:** Implementação de `AuthModal.tsx` com trap de teclado (ESC para fechar), bloqueio de scroll no body e abas integradas para Login e Cadastro.
+  * **Resiliência e Desacoplamento:** Criação do `authService.ts` com fallback inteligente local enquanto a API Spring Boot do backend é desenvolvida, permitindo validação contínua da interface.
+
 
 
 ## 7. Reflexão Final
