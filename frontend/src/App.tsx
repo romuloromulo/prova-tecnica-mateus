@@ -56,21 +56,27 @@ export const AppContent: React.FC = () => {
       {/* 1. Barra de Acessibilidade (Dona Marta) */}
       <A11yBar />
 
-      {/* 2. Cabeçalho Principal com Logo Mateus & Busca Integrada */}
-      <Header
-        cartItemCount={getTotalItems()}
-        userName={user?.name}
-        caderninhoLimit={user?.caderninhoLimit}
-        onOpenAuth={handleOpenLogin}
-        onLogout={logout}
-        onSearchChange={setSearchTerm}
-      />
-
-      {/* 3. Barra Única de Categorias / Setores */}
-      <Navbar
-        activeCategory={activeCategory}
-        onSelectCategory={(cat) => setActiveCategory(cat as ProductCategory | 'all')}
-      />
+      {/* 2 & 3. Cabeçalho Principal + Categorias Fixos no Topo (Sticky) */}
+      <div className="sticky top-0 z-40 shadow-soft">
+        <Header
+          cartItemCount={getTotalItems()}
+          userName={user?.name}
+          caderninhoLimit={user?.caderninhoLimit}
+          onOpenAuth={handleOpenLogin}
+          onLogout={logout}
+          onSearchChange={setSearchTerm}
+        />
+        <Navbar
+          activeCategory={activeCategory}
+          onSelectCategory={(cat) => {
+            setActiveCategory(cat as ProductCategory | 'all');
+            const catalogEl = document.getElementById('catalogo-produtos');
+            if (catalogEl) {
+              catalogEl.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        />
+      </div>
 
       {/* Modal de Autenticação Humanizada (Fase 2) */}
       <AuthModal
@@ -204,33 +210,28 @@ export const AppContent: React.FC = () => {
           </div>
         </section>
 
-        {/* Seção Mascote Dentinho & Guia Amigável */}
-        <section aria-labelledby="dentinho-section-title" className="space-y-3 sm:space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-            <div>
-              <div className="flex items-center gap-1.5 text-mateus-blue text-xs font-extrabold uppercase tracking-wider">
-                <Sparkles size={14} className="text-mateus-sky-500" />
-                <span>Mascote Oficial Grupo Mateus</span>
-              </div>
-              <h2 id="dentinho-section-title" className="text-xl sm:text-2xl font-black text-mateus-blue-900">
-                Dentinho, seu guia do balcão para a era digital
-              </h2>
+        {/* Dica Amigável do Mascote Dentinho */}
+        <section aria-label="Dica do Mascote Dentinho" className="space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 text-mateus-blue text-xs font-black uppercase tracking-wider">
+              <Sparkles size={14} className="text-mateus-sky-500" />
+              <span>Dica do Dentinho</span>
             </div>
 
-            {/* Seletor de poses */}
-            <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200 self-start sm:self-auto">
+            {/* Seletor rápido de poses */}
+            <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200">
               {(['ola', 'carrinho', 'sucesso'] as DentinhoVariant[]).map((pose) => (
                 <button
                   key={pose}
                   type="button"
                   onClick={() => setActiveDentinhoPose(pose)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold capitalize transition ${
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold capitalize transition ${
                     activeDentinhoPose === pose
                       ? 'bg-mateus-blue text-white shadow-xs'
                       : 'text-slate-600 hover:text-mateus-blue hover:bg-slate-50'
                   }`}
                 >
-                  {pose === 'ola' ? '👋 Olá' : pose === 'carrinho' ? '🛒 No Carrinho' : '🎉 Sucesso'}
+                  {pose === 'ola' ? '👋 Olá' : pose === 'carrinho' ? '🛒 Cesta' : '🎉 Dica'}
                 </button>
               ))}
             </div>

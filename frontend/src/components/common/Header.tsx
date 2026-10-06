@@ -23,7 +23,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   return (
-    <header className="bg-mateus-blue text-white shadow-soft sticky top-0 z-40">
+    <header className="bg-mateus-blue text-white shadow-xs">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3.5">
         <div className="flex items-center justify-between gap-2 sm:gap-4 lg:gap-6">
           {/* Brand Logo & Slogan */}

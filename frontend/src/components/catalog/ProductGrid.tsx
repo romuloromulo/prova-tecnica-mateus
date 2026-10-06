@@ -105,7 +105,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const products = Array.isArray(data?.content) ? data.content : [];
 
   return (
-    <section aria-labelledby="catalog-heading" className="space-y-6">
+    <section id="catalogo-produtos" aria-labelledby="catalog-heading" className="scroll-mt-32 space-y-6">
       {/* Cabeçalho do Setor Ativo & Filtros Aplicados */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-2 border-b border-slate-200/80">
         <div>
