@@ -13,6 +13,7 @@ interface AuthState {
   clearError: () => void;
   simulateLoginAsDonaMarta: () => void;
   simulateLoginAsPedro: () => void;
+  debitCaderninhoLimit: (amount: number) => void;
 }
 
 const getStoredToken = () => localStorage.getItem('mateus_auth_token');
@@ -26,7 +27,7 @@ const getStoredUser = (): User | null => {
   }
 };
 
-export const useAuthStore = create<AuthState>((set) => {
+export const useAuthStore = create<AuthState>((set, get) => {
   const initialToken = getStoredToken();
   const initialUser = getStoredUser();
 
@@ -77,6 +78,20 @@ export const useAuthStore = create<AuthState>((set) => {
       localStorage.setItem('mateus_auth_token', fakeToken);
       localStorage.setItem('mateus_user', JSON.stringify(pedro));
       set({ user: pedro, token: fakeToken, isAuthenticated: true, error: null });
+    },
+
+    // Debita o valor gasto no Caderninho Digital
+    debitCaderninhoLimit: (amount: number) => {
+      const currentUser = get().user;
+      if (!currentUser) return;
+      const currentLimit = currentUser.caderninhoLimit ?? 0;
+      const newLimit = Math.max(0, currentLimit - amount);
+      const updatedUser: User = {
+        ...currentUser,
+        caderninhoLimit: Number(newLimit.toFixed(2)),
+      };
+      localStorage.setItem('mateus_user', JSON.stringify(updatedUser));
+      set({ user: updatedUser });
     },
   };
 });

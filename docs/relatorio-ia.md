@@ -59,5 +59,12 @@
   * **Controle Rigoroso de Estoque (`CartItemRow.tsx`):** Limitador visual e desabilitação automática do botão `[+]` quando a quantidade atinge o estoque disponível no balcão, prevenindo que o usuário compre itens indisponíveis.
   * **Sincronização Resiliente (`cartService.ts`):** Camada de serviço com chamadas assíncronas preparadas para a API REST do backend Spring Boot e fallback transparente para persistência local sanitizada no `localStorage`.
 
+* **Fase 5 — Checkout e Gateway Humanizado de Alta Fidelidade:**
+  * **Decisão Arquitetural Crítica (Gateway Sandbox vs. Simulador com Luhn):** Em discussão estratégica com a IA, o desenvolvedor questionou o uso de um gateway real (como Stripe ou Mercado Pago). Foi ponderado que depender de chaves de API externas em um teste técnico cria fragilidade (risco de falha se o avaliador não possuir credenciais no `.env` ou se faltar webhook público). Optou-se pela implementação de um **Gateway de Alta Fidelidade com Padrão Strategy**: validação matemática real de cartões com o **Algoritmo de Luhn (ISO/IEC 7812)**, detecção dinâmica de bandeira pelo BIN (*Visa, Mastercard, Elo, Hipercard*), payload de PIX no formato oficial do Banco Central (BR Code) e cartões de teste com 1 clique para o avaliador auditar cenários de aprovação, recusa por saldo e bloqueio de segurança.
+  * **O Caderninho Digital do Seu Osvaldo como Diferencial:** Resgatando a história de 1987, o método proprietário permite aprovação com 1 clique para clientes cadastrados (Dona Marta com R$ 800 e Pedro com R$ 200 de limite de confiança), debitando o saldo em tempo real no `authStore`.
+  * **PIX com Simulador de Compensação Bancária (`PixPayment.tsx`):** QR Code vetorial dinâmico, código Copia e Cola funcional, timer regressivo de 15 minutos e caixa de ferramentas para o avaliador simular a notificação do app do banco em tempo real.
+  * **Celebração do Pedido com o Dentinho (`OrderSuccessModal.tsx`):** Modal festivo com o mascote na pose de comemoração (`dentinho-sucesso.svg`), protocolo oficial do pedido, estimativa de entrega e botão de impressão de recibo (`window.print()`).
+  * **Contratos Alinhados para o Backend Java (`orderService.ts`):** O frontend dispara chamadas REST reais preparadas para o Spring Boot (`POST /api/orders`, `POST /api/payments/simulate`) com fallback inteligente em memória e persistência no `localStorage`.
+
 ## 7. Reflexão Final
 *(Será preenchido na conclusão da entrega do front-end)*

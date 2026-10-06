@@ -6,6 +6,7 @@ import { Footer } from '@/components/common/Footer';
 import { DentinhoTip, type DentinhoVariant } from '@/components/common/DentinhoTip';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { CartDrawer } from '@/components/cart/CartDrawer';
+import { CheckoutModal } from '@/components/checkout/CheckoutModal';
 import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useAuthStore } from '@/store/authStore';
@@ -29,6 +30,7 @@ export const AppContent: React.FC = () => {
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const handleOpenLogin = () => {
     setAuthModalTab('login');
@@ -74,7 +76,13 @@ export const AppContent: React.FC = () => {
       </div>
 
       {/* Modal Lateral / Drawer Deslizante da Cesta (Fase 4) */}
-      <CartDrawer />
+      <CartDrawer onProceedToCheckout={() => setIsCheckoutOpen(true)} />
+
+      {/* Modal de Checkout & Simulador de Gateway Real (Fase 5) */}
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+      />
 
       {/* Modal de Autenticação Humanizada (Fase 2) */}
       <AuthModal
