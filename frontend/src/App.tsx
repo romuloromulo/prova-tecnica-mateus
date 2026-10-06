@@ -5,71 +5,31 @@ import { Navbar } from '@/components/common/Navbar';
 import { Footer } from '@/components/common/Footer';
 import { DentinhoTip, type DentinhoVariant } from '@/components/common/DentinhoTip';
 import { AuthModal } from '@/components/auth/AuthModal';
+import { ProductGrid } from '@/components/catalog/ProductGrid';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
-import type { Product } from '@/types/product';
+import type { ProductCategory } from '@/types/product';
 import {
   Sparkles,
   Heart,
   Plus,
+  Minus,
   Trash2,
   ShoppingBag,
   UserCheck,
   BookOpen
 } from 'lucide-react';
 
-// Amostra de produtos para testar integração
-const SAMPLE_PRODUCTS: Product[] = [
-  {
-    id: 1,
-    name: 'Café Tradicional do Seu Osvaldo 500g',
-    description: 'Torrado e moído na hora, sabor inconfundível do balcão de 1987.',
-    price: 18.9,
-    stockQuantity: 12,
-    category: 'mercearia',
-    unit: 'pct',
-    isPromotion: true,
-  },
-  {
-    id: 2,
-    name: 'Maçã Fuji Selecionada (Kg)',
-    description: 'Docinhas e crocantes, colhidas frescas no hortifrúti.',
-    price: 9.49,
-    stockQuantity: 25,
-    category: 'hortifruti',
-    unit: 'kg',
-  },
-  {
-    id: 3,
-    name: 'Pão Francês Tradicional (Cesta 6 un)',
-    description: 'Quentinho e crocante, saindo do forno a toda hora na padaria.',
-    price: 7.2,
-    stockQuantity: 8,
-    category: 'padaria',
-    unit: 'un',
-  },
-];
-
 export const App: React.FC = () => {
   const { user, isAuthenticated, simulateLoginAsDonaMarta, simulateLoginAsPedro, logout } = useAuthStore();
-  const { items, addItem, removeItem, updateQuantity, getTotalItems, getSubtotal } = useCartStore();
+  const { items, removeItem, updateQuantity, getTotalItems, getSubtotal } = useCartStore();
 
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeCategory, setActiveCategory] = useState<ProductCategory | 'all'>('all');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [activeDentinhoPose, setActiveDentinhoPose] = useState<DentinhoVariant>('ola');
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
-
-  const handleAddToCart = (product: Product) => {
-    const res = addItem(product, 1);
-    if (!res.success && res.message) {
-      setFeedbackMsg(res.message);
-      setTimeout(() => setFeedbackMsg(null), 4000);
-    } else {
-      setFeedbackMsg(`✓ ${product.name} adicionado à cesta!`);
-      setTimeout(() => setFeedbackMsg(null), 2500);
-    }
-  };
 
   const handleOpenLogin = () => {
     setAuthModalTab('login');
@@ -81,24 +41,30 @@ export const App: React.FC = () => {
     setIsAuthModalOpen(true);
   };
 
+  const handleFeedback = (msg: string) => {
+    setFeedbackMsg(msg);
+    setTimeout(() => setFeedbackMsg(null), 3000);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-mateus-surface text-slate-800 antialiased selection:bg-mateus-red selection:text-white">
       {/* 1. Barra de Acessibilidade (Dona Marta) */}
       <A11yBar />
 
-      {/* 2. Cabeçalho Principal com Logo Mateus & Ações */}
+      {/* 2. Cabeçalho Principal com Logo Mateus & Busca Integrada */}
       <Header
         cartItemCount={getTotalItems()}
         userName={user?.name}
         caderninhoLimit={user?.caderninhoLimit}
         onOpenAuth={handleOpenLogin}
         onLogout={logout}
+        onSearchChange={setSearchTerm}
       />
 
       {/* 3. Barra de Categorias */}
       <Navbar
         activeCategory={activeCategory}
-        onSelectCategory={setActiveCategory}
+        onSelectCategory={(cat) => setActiveCategory(cat as ProductCategory | 'all')}
       />
 
       {/* Modal de Autenticação Humanizada (Fase 2) */}
@@ -284,96 +250,40 @@ export const App: React.FC = () => {
           />
         </section>
 
-        {/* Vitrine de Demonstração de Produtos */}
-        <section aria-labelledby="catalog-preview-title" className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-1.5 text-mateus-red text-xs font-extrabold uppercase tracking-wider">
-                <Heart size={14} className="fill-mateus-red text-mateus-red" />
-                <span>Ofertas Selecionadas</span>
-              </div>
-              <h2 id="catalog-preview-title" className="text-xl sm:text-2xl font-black text-mateus-blue-900">
-                Itens em Destaque no Supermercado
-              </h2>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {SAMPLE_PRODUCTS.map((prod) => (
-              <div
-                key={prod.id}
-                className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-card hover:shadow-soft transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-mateus-sky-50 text-mateus-sky-600 border border-mateus-sky-200">
-                      {prod.category}
-                    </span>
-                    {prod.isPromotion && (
-                      <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-mateus-red-50 text-mateus-red border border-mateus-red-100 flex items-center gap-1">
-                        <Heart size={10} className="fill-mateus-red" /> Oferta do Seu Osvaldo
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 className="font-extrabold text-sm sm:text-base text-slate-800 leading-snug">
-                    {prod.name}
-                  </h3>
-
-                  <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                    {prod.description}
-                  </p>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <div>
-                    <span className="text-[11px] text-slate-400 font-semibold block">Preço</span>
-                    <span className="text-lg sm:text-xl font-black text-mateus-blue">
-                      R$ {prod.price.toFixed(2)}
-                      <small className="text-xs text-slate-400 font-normal"> /{prod.unit}</small>
-                    </span>
-                    <span className="block text-[11px] text-emerald-600 font-semibold">
-                      {prod.stockQuantity} un disponíveis
-                    </span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleAddToCart(prod)}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-mateus-red hover:bg-mateus-red-hover text-white text-xs font-extrabold shadow-heart transition active:scale-95"
-                  >
-                    <Plus size={16} />
-                    <span>Adicionar</span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* FASE 3: Catálogo Dinâmico por Setores com Paginação e Busca */}
+        <ProductGrid
+          selectedCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          onAddedFeedback={handleFeedback}
+        />
 
         {/* Resumo da Cesta Atual (Zustand Store) */}
         {items.length > 0 && (
           <section
             aria-label="Resumo da Cesta Atual"
-            className="bg-white rounded-2xl p-4 sm:p-6 border-2 border-mateus-sky-200 shadow-dentinho"
+            className="bg-white rounded-3xl p-5 sm:p-7 border-2 border-mateus-sky-200 shadow-dentinho"
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-              <div className="flex items-center gap-2 font-black text-base sm:text-lg text-mateus-blue">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5 font-black text-base sm:text-lg text-mateus-blue">
                 <ShoppingBag className="text-mateus-red" />
-                <span>Sua Cesta Atual ({getTotalItems()} itens)</span>
+                <span>Sua Cesta Atual ({getTotalItems()} {getTotalItems() === 1 ? 'item' : 'itens'})</span>
               </div>
-              <span className="text-lg sm:text-xl font-black text-mateus-blue">
-                Total: R$ {getSubtotal().toFixed(2)}
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-lg sm:text-xl font-black text-mateus-blue">
+                  Total: R$ {getSubtotal().toFixed(2).replace('.', ',')}
+                </span>
+              </div>
             </div>
 
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto pr-1">
               {items.map(({ product, quantity }) => (
-                <div key={product.id} className="py-2.5 sm:py-3 flex items-center justify-between gap-3">
+                <div key={product.id} className="py-3 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <p className="font-bold text-xs sm:text-sm text-slate-800 truncate">{product.name}</p>
-                    <p className="text-[11px] sm:text-xs text-slate-500">
-                      R$ {product.price.toFixed(2)} cada • Subtotal: R$ {(product.price * quantity).toFixed(2)}
+                    <p className="font-extrabold text-xs sm:text-sm text-slate-800 truncate">{product.name}</p>
+                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                      R$ {product.price.toFixed(2).replace('.', ',')} cada • Subtotal: R$ {(product.price * quantity).toFixed(2).replace('.', ',')}
                     </p>
                   </div>
 
@@ -382,18 +292,19 @@ export const App: React.FC = () => {
                       type="button"
                       onClick={() => updateQuantity(product.id, quantity - 1)}
                       aria-label="Diminuir quantidade"
-                      className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center transition"
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black flex items-center justify-center transition shadow-xs"
                     >
-                      -
+                      <Minus size={14} />
                     </button>
                     <span className="w-5 text-center text-xs sm:text-sm font-extrabold">{quantity}</span>
                     <button
                       type="button"
                       onClick={() => updateQuantity(product.id, quantity + 1)}
+                      disabled={quantity >= product.stockQuantity}
                       aria-label="Aumentar quantidade"
-                      className="w-7 h-7 rounded-lg bg-mateus-blue text-white font-bold flex items-center justify-center transition hover:bg-mateus-blue-700"
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-mateus-blue text-white font-black flex items-center justify-center transition hover:bg-mateus-blue-700 shadow-xs disabled:opacity-40"
                     >
-                      +
+                      <Plus size={14} />
                     </button>
                     <button
                       type="button"

@@ -44,6 +44,12 @@
   * **Validação Humanizada com Zod:** Em vez de mensagens genéricas em inglês (como *"Invalid email"* ou *"Too short"*), foram construídos schemas em Zod com linguagem afetuosa e didática, facilitando o entendimento de usuários idosos como a Dona Marta e eliminando atritos de formulário.
   * **Modal de Autenticação com Abas e Acessibilidade:** Implementação de `AuthModal.tsx` com trap de teclado (ESC para fechar), bloqueio de scroll no body e abas integradas para Login e Cadastro.
   * **Resiliência e Desacoplamento:** Criação do `authService.ts` com fallback inteligente local enquanto a API Spring Boot do backend é desenvolvida, permitindo validação contínua da interface.
+* **Fase 3 — Catálogo de Produtos, Filtros por Setor e Paginação:**
+  * **Transição Fluida entre Setores:** Criação do `ProductGrid.tsx` e `CategoryTabs.tsx` com contagem em tempo real de produtos por setor (*Hortifrúti, Açougue, Padaria, Mercearia, Limpeza*). Ao alternar o setor, o catálogo filtra instantaneamente os produtos e atualiza o cabeçalho descritivo.
+  * **Busca Otimizada com Debounce:** Implementação do `SearchInput.tsx` com temporizador de debounce (350ms) para evitar requisições redundantes a cada tecla digitada e botão para limpeza rápida.
+  * **Ergonomia e Sinais Visuais de Estoque:** No `ProductCard.tsx`, o botão de adicionar transforma-se em um seletor numérico `[-] qtd [+]` quando o item já está na cesta, com travas de estoque e badges semânticas (*Verde: Em estoque*, *Amarelo: Restam poucas unidades*, *Vermelho: Esgotado*).
+  * **Feedback Acolhedor de Estado Vazio:** Caso uma busca não retorne itens, o mascote Dentinho orienta o cliente com simpatia a buscar por outro termo ou limpar os filtros.
+
 
 
 
