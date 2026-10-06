@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <radialGradient id="furGrad3" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#A76038" />
+      <stop offset="100%" stop-color="#6E3719" />
+    </radialGradient>
+    <radialGradient id="bellyGrad3" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFE3BE" />
+      <stop offset="100%" stop-color="#EDC091" />
+    </radialGradient>
+    <linearGradient id="mateusBlue3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0052CC" />
+      <stop offset="100%" stop-color="#003893" />
+    </linearGradient>
+    <linearGradient id="mateusRed3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF3B47" />
+      <stop offset="100%" stop-color="#E31826" />
+    </linearGradient>
+    <linearGradient id="goldStar" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+
+  <!-- Celebratory Stars and sparkles -->
+  <path d="M 30,50 L 33,58 L 41,58 L 35,63 L 37,71 L 30,66 L 23,71 L 25,63 L 19,58 L 27,58 Z" fill="url(#goldStar)" />
+  <path d="M 170,45 L 173,53 L 181,53 L 175,58 L 177,66 L 170,61 L 163,66 L 165,58 L 159,53 L 167,53 Z" fill="url(#goldStar)" />
+  <circle cx="50" cy="35" r="4" fill="#009EE3" />
+  <circle cx="155" cy="30" r="4" fill="#10B981" />
+  <circle cx="100" cy="20" r="5" fill="#E31826" />
+
+  <!-- Castor Tail -->
+  <path d="M 40,140 C 20,130 10,165 30,175 C 50,185 65,160 55,145 Z" fill="#4A2511" stroke="#331809" stroke-width="3" />
+  <path d="M 32,150 L 45,165 M 28,160 L 40,172" stroke="#331809" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Feet (Jumping / Happy) -->
+  <ellipse cx="78" cy="172" rx="18" ry="10" fill="#4A2511" />
+  <ellipse cx="122" cy="172" rx="18" ry="10" fill="#4A2511" />
+
+  <!-- Body -->
+  <ellipse cx="100" cy="135" rx="46" ry="42" fill="url(#furGrad3)" />
+  <ellipse cx="100" cy="140" rx="30" ry="26" fill="url(#bellyGrad3)" />
+  <!-- Heart Badge -->
+  <path d="M 100,132 C 98,126 90,126 90,133 C 90,139 100,146 100,146 C 100,146 110,139 110,133 C 110,126 102,126 100,132 Z" fill="url(#mateusRed3)" />
+
+  <!-- Arms Raised (Hooray / Sucesso!) -->
+  <!-- Left Arm Up -->
+  <path d="M 62,125 C 45,105 45,80 50,70" fill="none" stroke="#6E3719" stroke-width="14" stroke-linecap="round" />
+  <circle cx="50" cy="70" r="8" fill="#4A2511" />
+  <!-- Right Arm Up -->
+  <path d="M 138,125 C 155,105 155,80 150,70" fill="none" stroke="#6E3719" stroke-width="14" stroke-linecap="round" />
+  <circle cx="150" cy="70" r="8" fill="#4A2511" />
+
+  <!-- Ears -->
+  <circle cx="68" cy="62" r="14" fill="#6E3719" />
+  <circle cx="68" cy="62" r="8" fill="#EDC091" />
+  <circle cx="132" cy="62" r="14" fill="#6E3719" />
+  <circle cx="132" cy="62" r="8" fill="#EDC091" />
+
+  <!-- Head -->
+  <ellipse cx="100" cy="85" rx="44" ry="38" fill="url(#furGrad3)" />
+
+  <!-- Joyful Happy Eyes (^ ^) -->
+  <path d="M 75,76 Q 84,68 93,76" fill="none" stroke="#1E1E1E" stroke-width="4.5" stroke-linecap="round" />
+  <path d="M 107,76 Q 116,68 125,76" fill="none" stroke="#1E1E1E" stroke-width="4.5" stroke-linecap="round" />
+
+  <!-- Snout Background -->
+  <ellipse cx="86" cy="98" rx="18" ry="14" fill="url(#bellyGrad3)" />
+  <ellipse cx="114" cy="98" rx="18" ry="14" fill="url(#bellyGrad3)" />
+
+  <!-- Nose -->
+  <path d="M 94,88 C 94,85 106,85 106,88 C 106,94 94,94 94,88 Z" fill="#291206" />
+
+  <!-- Big Grin -->
+  <path d="M 88,96 Q 100,108 112,96" fill="none" stroke="#291206" stroke-width="2.5" stroke-linecap="round" />
+
+  <!-- Buck Teeth -->
+  <rect x="95" y="99" width="5" height="9" rx="1" fill="#FFFFFF" stroke="#4A2511" stroke-width="1.2" />
+  <rect x="100" y="99" width="5" height="9" rx="1" fill="#FFFFFF" stroke="#4A2511" stroke-width="1.2" />
+
+  <!-- Rosy cheeks -->
+  <ellipse cx="70" cy="94" rx="9" ry="6" fill="#FF8A8A" opacity="0.6" />
+  <ellipse cx="130" cy="94" rx="9" ry="6" fill="#FF8A8A" opacity="0.6" />
+
+  <!-- Cap -->
+  <path d="M 68,58 C 75,44 125,44 132,58 C 130,52 70,52 68,58 Z" fill="url(#mateusBlue3)" />
+  <path d="M 65,58 C 80,48 120,48 135,58 C 145,58 140,64 125,65 C 100,67 75,65 60,65 C 55,62 60,58 65,58 Z" fill="url(#mateusBlue3)" />
+  <circle cx="100" cy="53" r="4" fill="url(#mateusRed3)" />
+
+  <!-- Success Checkmark Badge -->
+  <circle cx="100" cy="182" r="16" fill="#10B981" stroke="#FFFFFF" stroke-width="2.5" />
+  <path d="M 92,182 L 98,188 L 109,176" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

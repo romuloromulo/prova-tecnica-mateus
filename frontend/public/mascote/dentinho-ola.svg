@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <!-- Defs / Gradient -->
+  <defs>
+    <radialGradient id="furGrad" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#A76038" />
+      <stop offset="100%" stop-color="#6E3719" />
+    </radialGradient>
+    <radialGradient id="bellyGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFE3BE" />
+      <stop offset="100%" stop-color="#EDC091" />
+    </radialGradient>
+    <linearGradient id="mateusBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0052CC" />
+      <stop offset="100%" stop-color="#003893" />
+    </linearGradient>
+    <linearGradient id="mateusRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF3B47" />
+      <stop offset="100%" stop-color="#E31826" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- Tail (Castor) -->
+  <path d="M 40,140 C 20,130 10,165 30,175 C 50,185 65,160 55,145 Z" fill="#4A2511" stroke="#331809" stroke-width="3" />
+  <path d="M 32,150 L 45,165 M 28,160 L 40,172 M 35,143 L 48,155" stroke="#331809" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Feet -->
+  <ellipse cx="78" cy="175" rx="18" ry="10" fill="#4A2511" />
+  <ellipse cx="122" cy="175" rx="18" ry="10" fill="#4A2511" />
+
+  <!-- Body -->
+  <ellipse cx="100" cy="135" rx="46" ry="42" fill="url(#furGrad)" filter="url(#shadow)" />
+  <!-- Belly -->
+  <ellipse cx="100" cy="140" rx="30" ry="26" fill="url(#bellyGrad)" />
+  <!-- Heart Stamp on chest (Grupo Mateus tribute) -->
+  <path d="M 100,132 C 98,126 90,126 90,133 C 90,139 100,146 100,146 C 100,146 110,139 110,133 C 110,126 102,126 100,132 Z" fill="url(#mateusRed)" />
+
+  <!-- Left Arm (Resting) -->
+  <path d="M 60,130 C 50,135 55,155 70,148" fill="none" stroke="#6E3719" stroke-width="14" stroke-linecap="round" />
+  <circle cx="70" cy="148" r="7" fill="#4A2511" />
+
+  <!-- Right Arm (Waving / Olá!) -->
+  <path d="M 140,130 C 158,115 168,95 160,82" fill="none" stroke="#6E3719" stroke-width="14" stroke-linecap="round" />
+  <circle cx="160" cy="80" r="9" fill="#4A2511" />
+  <!-- Waving motion sparkles -->
+  <path d="M 172,70 L 176,64 M 180,78 L 188,78 M 174,86 L 180,92" stroke="#009EE3" stroke-width="3" stroke-linecap="round" />
+
+  <!-- Ears -->
+  <circle cx="68" cy="62" r="14" fill="#6E3719" />
+  <circle cx="68" cy="62" r="8" fill="#EDC091" />
+  <circle cx="132" cy="62" r="14" fill="#6E3719" />
+  <circle cx="132" cy="62" r="8" fill="#EDC091" />
+
+  <!-- Head -->
+  <ellipse cx="100" cy="85" rx="44" ry="38" fill="url(#furGrad)" filter="url(#shadow)" />
+  
+  <!-- Cheeks / Snout background -->
+  <ellipse cx="86" cy="98" rx="18" ry="14" fill="url(#bellyGrad)" />
+  <ellipse cx="114" cy="98" rx="18" ry="14" fill="url(#bellyGrad)" />
+
+  <!-- Eyes with friendly catchlights -->
+  <ellipse cx="84" cy="78" rx="7" ry="9" fill="#1E1E1E" />
+  <circle cx="82" cy="75" r="3" fill="#FFFFFF" />
+  <circle cx="86" cy="81" r="1.5" fill="#FFFFFF" />
+
+  <ellipse cx="116" cy="78" rx="7" ry="9" fill="#1E1E1E" />
+  <circle cx="114" cy="75" r="3" fill="#FFFFFF" />
+  <circle cx="118" cy="81" r="1.5" fill="#FFFFFF" />
+
+  <!-- Nose -->
+  <path d="M 94,88 C 94,85 106,85 106,88 C 106,94 94,94 94,88 Z" fill="#291206" />
+
+  <!-- Mouth -->
+  <path d="M 92,97 C 96,102 100,102 100,97 C 100,102 104,102 108,97" fill="none" stroke="#291206" stroke-width="2.5" stroke-linecap="round" />
+
+  <!-- The Famous Castor Buck Teeth (Dentinho!) -->
+  <rect x="95" y="99" width="5" height="9" rx="1" fill="#FFFFFF" stroke="#4A2511" stroke-width="1.2" />
+  <rect x="100" y="99" width="5" height="9" rx="1" fill="#FFFFFF" stroke="#4A2511" stroke-width="1.2" />
+
+  <!-- Rosy Cheeks -->
+  <ellipse cx="72" cy="95" rx="8" ry="5" fill="#FF8A8A" opacity="0.45" />
+  <ellipse cx="128" cy="95" rx="8" ry="5" fill="#FF8A8A" opacity="0.45" />
+
+  <!-- Supermercado Cap / Visor (Azul Grupo Mateus) -->
+  <path d="M 68,58 C 75,44 125,44 132,58 C 130,52 70,52 68,58 Z" fill="url(#mateusBlue)" />
+  <path d="M 65,58 C 80,48 120,48 135,58 C 145,58 140,64 125,65 C 100,67 75,65 60,65 C 55,62 60,58 65,58 Z" fill="url(#mateusBlue)" />
+  <circle cx="100" cy="53" r="4" fill="url(#mateusRed)" />
+</svg>

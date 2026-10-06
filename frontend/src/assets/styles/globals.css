@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-mateus-blue: #003893;
+    --color-mateus-red: #E31826;
+    --color-mateus-sky: #009EE3;
+    --color-surface: #F8FAFC;
+    --color-surface-card: #FFFFFF;
+    --font-scale: 100%;
+  }
+
+  html {
+    font-size: var(--font-scale);
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: #1e293b;
+    font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Focus ring for accessibility (Dona Marta / A11y) */
+  :focus-visible {
+    outline: 3px solid #009EE3;
+    outline-offset: 2px;
+  }
+}
+
+/* Accessibility Modes (Dona Marta & Senior Friendly) */
+body.font-size-lg {
+  --font-scale: 115%;
+}
+
+body.font-size-xl {
+  --font-scale: 130%;
+}
+
+/* High Contrast Mode */
+body.high-contrast {
+  --color-surface: #000000;
+  --color-surface-card: #121212;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.high-contrast * {
+  border-color: #ffffff !important;
+}
+
+body.high-contrast .bg-white,
+body.high-contrast .bg-mateus-surface {
+  background-color: #121212 !important;
+  color: #ffffff !important;
+}
+
+body.high-contrast .text-slate-600,
+body.high-contrast .text-slate-500,
+body.high-contrast .text-slate-700 {
+  color: #f1f5f9 !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

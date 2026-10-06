@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" width="100%" height="100%">
+  <defs>
+    <radialGradient id="furGrad2" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#A76038" />
+      <stop offset="100%" stop-color="#6E3719" />
+    </radialGradient>
+    <radialGradient id="bellyGrad2" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFE3BE" />
+      <stop offset="100%" stop-color="#EDC091" />
+    </radialGradient>
+    <linearGradient id="mateusBlue2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0052CC" />
+      <stop offset="100%" stop-color="#003893" />
+    </linearGradient>
+    <linearGradient id="mateusRed2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF3B47" />
+      <stop offset="100%" stop-color="#E31826" />
+    </linearGradient>
+  </defs>
+
+  <!-- Beaver Tail Behind -->
+  <path d="M 25,145 C 5,140 5,170 20,180 C 40,190 50,170 45,150 Z" fill="#4A2511" stroke="#331809" stroke-width="2.5" />
+
+  <!-- Back Foot & Front Foot -->
+  <ellipse cx="60" cy="178" rx="16" ry="9" fill="#4A2511" />
+  <ellipse cx="95" cy="178" rx="16" ry="9" fill="#4A2511" />
+
+  <!-- Dentinho Body leaning forward into cart -->
+  <ellipse cx="78" cy="135" rx="42" ry="38" fill="url(#furGrad2)" />
+  <ellipse cx="86" cy="138" rx="26" ry="24" fill="url(#bellyGrad2)" />
+  <!-- Heart logo on shirt -->
+  <path d="M 88,132 C 86,128 80,128 80,133 C 80,138 88,143 88,143 C 88,143 96,138 96,133 C 96,128 90,128 88,132 Z" fill="url(#mateusRed2)" />
+
+  <!-- Head -->
+  <ellipse cx="90" cy="80" rx="36" ry="32" fill="url(#furGrad2)" />
+  <!-- Ears -->
+  <circle cx="65" cy="60" r="11" fill="#6E3719" />
+  <circle cx="65" cy="60" r="6" fill="#EDC091" />
+  <circle cx="112" cy="60" r="11" fill="#6E3719" />
+  <circle cx="112" cy="60" r="6" fill="#EDC091" />
+
+  <!-- Snout & Teeth -->
+  <ellipse cx="82" cy="92" rx="14" ry="11" fill="url(#bellyGrad2)" />
+  <ellipse cx="102" cy="92" rx="14" ry="11" fill="url(#bellyGrad2)" />
+  <ellipse cx="80" cy="74" rx="5" ry="7" fill="#1E1E1E" />
+  <circle cx="78" cy="71" r="2.5" fill="#FFFFFF" />
+  <ellipse cx="102" cy="74" rx="5" ry="7" fill="#1E1E1E" />
+  <circle cx="100" cy="71" r="2.5" fill="#FFFFFF" />
+  <path d="M 88,83 C 88,80 96,80 96,83 C 96,88 88,88 88,83 Z" fill="#291206" />
+  <!-- Teeth -->
+  <rect x="89" y="94" width="4" height="7" rx="1" fill="#FFFFFF" stroke="#4A2511" stroke-width="1" />
+  <rect x="93" y="94" width="4" height="7" rx="1" fill="#FFFFFF" stroke="#4A2511" stroke-width="1" />
+
+  <!-- Cap -->
+  <path d="M 64,56 C 75,44 110,44 118,56 Z" fill="url(#mateusBlue2)" />
+  <path d="M 60,56 C 80,48 115,48 128,56 C 132,58 120,62 105,62 C 85,62 65,60 60,56 Z" fill="url(#mateusBlue2)" />
+
+  <!-- Arms pushing shopping cart -->
+  <path d="M 85,122 L 130,118" stroke="#6E3719" stroke-width="12" stroke-linecap="round" />
+  <circle cx="132" cy="118" r="7" fill="#4A2511" />
+
+  <!-- Shopping Cart (Supermercado) -->
+  <!-- Handle -->
+  <path d="M 132,118 L 140,118" stroke="#E31826" stroke-width="5" stroke-linecap="round" />
+  <!-- Basket Frame -->
+  <path d="M 138,118 L 145,145 L 205,145 L 220,105 L 142,105" fill="none" stroke="#003893" stroke-width="4" stroke-linejoin="round" />
+  <!-- Grid lines -->
+  <line x1="155" y1="108" x2="158" y2="142" stroke="#009EE3" stroke-width="2" />
+  <line x1="172" y1="108" x2="173" y2="142" stroke="#009EE3" stroke-width="2" />
+  <line x1="190" y1="108" x2="188" y2="142" stroke="#009EE3" stroke-width="2" />
+  <line x1="205" y1="108" x2="200" y2="142" stroke="#009EE3" stroke-width="2" />
+  <line x1="144" y1="118" x2="216" y2="118" stroke="#009EE3" stroke-width="2" />
+  <line x1="146" y1="132" x2="210" y2="132" stroke="#009EE3" stroke-width="2" />
+
+  <!-- Fresh Apple / Items inside cart -->
+  <circle cx="170" cy="100" r="12" fill="#E31826" />
+  <path d="M 170,88 C 170,84 174,82 176,82" stroke="#4A2511" stroke-width="2" fill="none" />
+  <path d="M 174,84 C 180,82 182,86 182,86 C 182,86 178,88 174,84 Z" fill="#10B981" />
+  <!-- Bread baguette / Pacote de Pão -->
+  <ellipse cx="195" cy="95" rx="14" ry="7" transform="rotate(-30 195 95)" fill="#F59E0B" stroke="#D97706" stroke-width="1.5" />
+
+  <!-- Cart Undercarriage & Wheels -->
+  <path d="M 148,145 L 155,168 L 200,168 L 202,145" fill="none" stroke="#003893" stroke-width="3.5" />
+  <!-- Wheels -->
+  <circle cx="155" cy="175" r="9" fill="#1E293B" stroke="#94A3B8" stroke-width="2.5" />
+  <circle cx="155" cy="175" r="3" fill="#FFFFFF" />
+  <circle cx="202" cy="175" r="9" fill="#1E293B" stroke="#94A3B8" stroke-width="2.5" />
+  <circle cx="202" cy="175" r="3" fill="#FFFFFF" />
+
+  <!-- Speed lines -->
+  <path d="M 10,130 L 25,130 M 5,140 L 20,140 M 12,150 L 28,150" stroke="#009EE3" stroke-width="3" stroke-linecap="round" opacity="0.7" />
+</svg>
