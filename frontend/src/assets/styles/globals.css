@@ -9,11 +9,9 @@
     --color-mateus-sky: #009EE3;
     --color-surface: #F8FAFC;
     --color-surface-card: #FFFFFF;
-    --font-scale: 100%;
   }
 
   html {
-    font-size: var(--font-scale);
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
   }
@@ -23,6 +21,7 @@
     color: #1e293b;
     font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif;
     min-height: 100vh;
+    transition: color 0.2s ease, background-color 0.2s ease;
   }
 
   /* Focus ring for accessibility (Dona Marta / A11y) */
@@ -32,16 +31,45 @@
   }
 }
 
-/* Accessibility Modes (Dona Marta & Senior Friendly) */
+/* ==========================================================================
+   Acessibilidade Tipográfica: Aumento Exclusivo da Fonte (WCAG 2.1 - 1.4.4)
+   Altera ESTRITAMENTE o tamanho dos textos, títulos e números.
+   NÃO altera paddings, larguras de caixas, alturas, containers ou o layout.
+   ========================================================================== */
+
+/* Nível 1: A+ (+15% a +20% no tamanho das letras) */
 body.font-size-lg {
-  --font-scale: 115%;
+  font-size: 1.15rem;
 }
+body.font-size-lg .text-\[10px\] { font-size: 12px !important; }
+body.font-size-lg .text-\[11px\] { font-size: 13px !important; }
+body.font-size-lg .text-xs { font-size: 0.9rem !important; }
+body.font-size-lg .text-sm { font-size: 1.05rem !important; }
+body.font-size-lg .text-base { font-size: 1.18rem !important; }
+body.font-size-lg .text-lg { font-size: 1.3rem !important; }
+body.font-size-lg .text-xl { font-size: 1.45rem !important; }
+body.font-size-lg .text-2xl { font-size: 1.75rem !important; }
+body.font-size-lg .text-3xl { font-size: 2.15rem !important; }
+body.font-size-lg .text-4xl { font-size: 2.6rem !important; }
+body.font-size-lg .text-5xl { font-size: 3.4rem !important; }
 
+/* Nível 2: A++ (+30% a +40% no tamanho das letras - Máximo para Dona Marta) */
 body.font-size-xl {
-  --font-scale: 130%;
+  font-size: 1.3rem;
 }
+body.font-size-xl .text-\[10px\] { font-size: 14px !important; }
+body.font-size-xl .text-\[11px\] { font-size: 15px !important; }
+body.font-size-xl .text-xs { font-size: 1.05rem !important; }
+body.font-size-xl .text-sm { font-size: 1.2rem !important; }
+body.font-size-xl .text-base { font-size: 1.35rem !important; }
+body.font-size-xl .text-lg { font-size: 1.5rem !important; }
+body.font-size-xl .text-xl { font-size: 1.65rem !important; }
+body.font-size-xl .text-2xl { font-size: 2.0rem !important; }
+body.font-size-xl .text-3xl { font-size: 2.45rem !important; }
+body.font-size-xl .text-4xl { font-size: 3.0rem !important; }
+body.font-size-xl .text-5xl { font-size: 3.8rem !important; }
 
-/* High Contrast Mode */
+/* Alto Contraste */
 body.high-contrast {
   --color-surface: #000000;
   --color-surface-card: #121212;
