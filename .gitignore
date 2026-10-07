@@ -7,6 +7,14 @@ dist/
 frontend/dist/
 dist-ssr/
 
+# Java & Maven Build Artifacts
+target/
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+
 # IDE & Gemini
 .gemini/
 .idea/
