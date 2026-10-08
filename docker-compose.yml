@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # 1. Banco de Dados Relacional: PostgreSQL 16
+  # ============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: supermarket-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: supermarket
+      POSTGRES_USER: supermarket
+      POSTGRES_PASSWORD: supermarket_pass_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U supermarket -d supermarket"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================================
+  # 2. Backend API: Spring Boot 3 + Java 21
+  # ============================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: supermarket-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/supermarket
+      SPRING_DATASOURCE_USERNAME: supermarket
+      SPRING_DATASOURCE_PASSWORD: supermarket_pass_2026
+      APP_JWT_SECRET: supermarket_secret_key_for_jwt_signing_token_2026_super_safe_grupomateus
+    ports:
+      - "8080:8080"
+
+  # ============================================================================
+  # 3. Frontend Web: React + TypeScript + Nginx Reverse Proxy
+  # ============================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: supermarket-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "3000:80"
+
+volumes:
+  postgres_data:

@@ -41,3 +41,7 @@ pnpm-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Internal interview & defense notes
+docs/guia-defesa-backend.md
+
