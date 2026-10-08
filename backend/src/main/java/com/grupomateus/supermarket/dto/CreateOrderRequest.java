@@ -3,7 +3,6 @@ package com.grupomateus.supermarket.dto;
 import com.grupomateus.supermarket.model.PaymentMethod;
 
 public record CreateOrderRequest(
-        // Campos em formato plano
         String recipientName,
         String street,
         String number,
@@ -12,17 +11,14 @@ public record CreateOrderRequest(
         String state,
         String cep,
 
-        // Método de pagamento
         PaymentMethod paymentMethod,
 
-        // Cartão em formato plano
         String creditCardNumber,
         String creditCardHolder,
         String creditCardExpiry,
         String creditCardCvv,
         Integer installments,
 
-        // Objetos aninhados para compatibilidade total com o payload do frontend React
         ShippingAddressDto shippingAddress,
         CreditCardDto cardData
 ) {

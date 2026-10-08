@@ -24,14 +24,11 @@ const saveOrderLocal = (order: Order): void => {
     const updated = [order, ...orders.filter((o) => o.id !== order.id)];
     localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updated));
   } catch {
-    // Silently ignore quota exceeded
+    
   }
 };
 
 export const orderService = {
-  /**
-   * Cria um novo pedido (Consome API Spring Boot com fallback resiliente)
-   */
   async createOrder(payload: CreateOrderPayload): Promise<Order> {
     try {
       const response = await api.post('/orders', payload);
@@ -45,9 +42,6 @@ export const orderService = {
     }
   },
 
-  /**
-   * Simula a criação de pedido quando o backend estiver offline
-   */
   simulateCreateOrder(payload: CreateOrderPayload): Order {
     const orderId = `ORD-${Date.now().toString().slice(-6)}`;
     const subtotal = payload.items.reduce(
@@ -60,7 +54,6 @@ export const orderService = {
     let initialStatus: OrderStatus = 'PENDING';
     let failureReason: string | undefined;
 
-    // Lógica para Cartão de Crédito
     let cardDetails = undefined;
     if (payload.paymentMethod === 'CARTAO_CREDITO' && payload.cardData) {
       const cleanNumber = payload.cardData.number.replace(/\D/g, '');
@@ -71,7 +64,6 @@ export const orderService = {
         installments: payload.cardData.installments || 1,
       };
 
-      // Test Cards: 2 = Saldo Insuficiente, 3 = Bloqueio
       if (cleanNumber.endsWith('0002')) {
         initialStatus = 'REJECTED';
         failureReason = 'Transação recusada pelo banco emissor: Saldo insuficiente.';
@@ -86,7 +78,6 @@ export const orderService = {
       }
     }
 
-    // Lógica para Caderninho Digital (Aprovação imediata de confiança de 1987)
     let caderninhoDetails = undefined;
     if (payload.paymentMethod === 'CADERNINHO') {
       initialStatus = 'APPROVED';
@@ -97,7 +88,6 @@ export const orderService = {
       };
     }
 
-    // Lógica para PIX (Geração de QR Code e payload oficial)
     let pixDetails = undefined;
     if (payload.paymentMethod === 'PIX') {
       const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
@@ -130,9 +120,6 @@ export const orderService = {
     return order;
   },
 
-  /**
-   * Simula a transição de estado de pagamento (ex: Avaliador aprovando PIX ou testando recusa)
-   */
   async simulatePayment(request: PaymentSimulationRequest): Promise<Order> {
     try {
       const response = await api.post('/payments/simulate', request);
@@ -146,9 +133,6 @@ export const orderService = {
     }
   },
 
-  /**
-   * Atualiza o status do pedido localmente
-   */
   simulateLocalPaymentTransition(request: PaymentSimulationRequest): Order {
     const orders = getStoredOrders();
     const existing = orders.find((o) => o.id === request.orderId);
@@ -184,9 +168,6 @@ export const orderService = {
     return updated;
   },
 
-  /**
-   * Obtém um pedido pelo ID
-   */
   async getOrderById(orderId: string): Promise<Order | null> {
     try {
       const response = await api.get(`/orders/${orderId}`);
