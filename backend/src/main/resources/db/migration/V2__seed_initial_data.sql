@@ -1,12 +1,12 @@
 -- V2: Carga Inicial de Dados de Teste (Personas Dona Marta, Pedro e Catálogo de Produtos)
 -- Supermercado "Você no Coração da Gente" (Grupo Mateus)
 
--- Hash BCrypt para a senha 'marta123': $2a$10$wYQO1i8YQ9sE7P0b5h0Sbe1.wX1eP5N1e9W8sO0p1q2r3s4t5u6v7
--- Hash BCrypt para a senha 'pedro123': $2a$10$r9QO1i8YQ9sE7P0b5h0Sbe1.wX1eP5N1e9W8sO0p1q2r3s4t5u6v8
+-- Hash BCrypt para a senha 'marta123': $2a$10$SGr2sQyTG/q.x.EGtswE8e8KYlWaozcJH8/ItE0qSz3.DFI0pGSG6
+-- Hash BCrypt para a senha 'pedro123': $2a$10$ITd4Y5C2a5a9iKSR8BBMQ.xu.DVbHp1ciPqfb42vw1hDDCjRjE7d6
 
 INSERT INTO users (name, email, password, phone, caderninho_limit) VALUES
-('Dona Marta de Sousa', 'marta@mateus.com.br', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi', '(98) 98888-1987', 800.00),
-('Pedro Henrique de Sousa', 'pedro@mateus.com.br', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi', '(98) 99191-2026', 200.00);
+('Dona Marta de Sousa', 'marta@mateus.com.br', '$2a$10$SGr2sQyTG/q.x.EGtswE8e8KYlWaozcJH8/ItE0qSz3.DFI0pGSG6', '(98) 98888-1987', 800.00),
+('Pedro Henrique de Sousa', 'pedro@mateus.com.br', '$2a$10$ITd4Y5C2a5a9iKSR8BBMQ.xu.DVbHp1ciPqfb42vw1hDDCjRjE7d6', '(98) 99191-2026', 200.00);
 
 -- Catálogo de Produtos das 5 Categorias Oficiais
 INSERT INTO products (name, description, category, price, stock_quantity, image_url, version) VALUES

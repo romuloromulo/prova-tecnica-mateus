@@ -71,8 +71,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       setTimeout(() => {
         onSuccess?.();
       }, 900);
-    } catch {
-      setGeneralError('Houve um contratempo ao registrar sua conta. Por favor, tente novamente ou fale com nosso apoio.');
+    } catch (err: any) {
+      const msg = err.response?.data?.message || 'Houve um contratempo ao registrar sua conta. Por favor, tente novamente.';
+      setGeneralError(msg);
     } finally {
       setIsLoading(false);
     }

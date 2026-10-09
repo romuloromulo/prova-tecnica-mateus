@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { User } from '../types/auth';
+import { authService } from '../services/authService';
 
 interface AuthState {
   user: User | null;
@@ -11,8 +12,8 @@ interface AuthState {
   setAuth: (user: User, token: string) => void;
   logout: () => void;
   clearError: () => void;
-  simulateLoginAsDonaMarta: () => void;
-  simulateLoginAsPedro: () => void;
+  simulateLoginAsDonaMarta: () => Promise<void>;
+  simulateLoginAsPedro: () => Promise<void>;
   debitCaderninhoLimit: (amount: number) => void;
 }
 
@@ -52,35 +53,24 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     clearError: () => set({ error: null }),
 
-    // Acolhedor: permite testar diretamente a persona Dona Marta
-    simulateLoginAsDonaMarta: () => {
-      const donaMarta: User = {
-        id: 1,
-        name: 'Dona Marta',
-        email: 'marta.osvaldo@mateus.com.br',
-        caderninhoLimit: 450.0,
-      };
-      const fakeToken = 'mock_jwt_dona_marta_token_1987';
-      localStorage.setItem('mateus_auth_token', fakeToken);
-      localStorage.setItem('mateus_user', JSON.stringify(donaMarta));
-      set({ user: donaMarta, token: fakeToken, isAuthenticated: true, error: null });
+    simulateLoginAsDonaMarta: async () => {
+      try {
+        const res = await authService.login({ email: 'marta@mateus.com.br', password: 'marta123' });
+        get().setAuth(res.user, res.token);
+      } catch (err) {
+        console.error('Falha ao autenticar Dona Marta na API:', err);
+      }
     },
 
-    // Acolhedor: permite testar diretamente a persona Pedro (neto)
-    simulateLoginAsPedro: () => {
-      const pedro: User = {
-        id: 2,
-        name: 'Pedro (Neto da Dona Marta)',
-        email: 'pedro.universitario@mateus.com.br',
-        caderninhoLimit: 200.0,
-      };
-      const fakeToken = 'mock_jwt_pedro_token_2026';
-      localStorage.setItem('mateus_auth_token', fakeToken);
-      localStorage.setItem('mateus_user', JSON.stringify(pedro));
-      set({ user: pedro, token: fakeToken, isAuthenticated: true, error: null });
+    simulateLoginAsPedro: async () => {
+      try {
+        const res = await authService.login({ email: 'pedro@mateus.com.br', password: 'pedro123' });
+        get().setAuth(res.user, res.token);
+      } catch (err) {
+        console.error('Falha ao autenticar Pedro na API:', err);
+      }
     },
 
-    // Debita o valor gasto no Caderninho Digital
     debitCaderninhoLimit: (amount: number) => {
       const currentUser = get().user;
       if (!currentUser) return;

@@ -61,8 +61,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       setTimeout(() => {
         onSuccess?.();
       }, 700);
-    } catch {
-      setGeneralError('Não conseguimos encontrar sua conta com esses dados. Confira o e-mail e a senha digitados.');
+    } catch (err: any) {
+      const msg = err.response?.data?.message || 'E-mail ou senha incorretos. Confira os dados digitados.';
+      setGeneralError(msg);
     } finally {
       setIsLoading(false);
     }
@@ -101,8 +102,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button
             type="button"
-            onClick={() => {
-              simulateLoginAsDonaMarta();
+            onClick={async () => {
+              setFormData({ email: 'marta@mateus.com.br', password: 'marta123' });
+              await simulateLoginAsDonaMarta();
               setSuccessToast(true);
               setTimeout(() => onSuccess?.(), 700);
             }}
@@ -113,8 +115,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
           <button
             type="button"
-            onClick={() => {
-              simulateLoginAsPedro();
+            onClick={async () => {
+              setFormData({ email: 'pedro@mateus.com.br', password: 'pedro123' });
+              await simulateLoginAsPedro();
               setSuccessToast(true);
               setTimeout(() => onSuccess?.(), 700);
             }}
