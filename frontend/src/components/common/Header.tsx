@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowUserDropdown((prev) => !prev)}
-                  className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-mateus-blue-700 hover:bg-mateus-blue-600 text-white transition text-xs font-semibold border border-mateus-blue-500/40"
+                  className="header-user-btn flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-mateus-blue-700 hover:bg-mateus-blue-600 text-white transition text-xs font-semibold border border-mateus-blue-500/40"
                   aria-expanded={showUserDropdown}
                   aria-haspopup="true"
                 >
@@ -95,13 +95,13 @@ export const Header: React.FC<HeaderProps> = ({
                 {/* Dropdown do usuário logado */}
                 {showUserDropdown && (
                   <div
-                    className="absolute right-0 mt-2 w-56 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-100 py-2 z-50 animate-in fade-in zoom-in-95"
+                    className="header-user-dropdown absolute right-0 mt-2 w-56 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-100 py-2 z-50 animate-in fade-in zoom-in-95"
                     onClick={() => setShowUserDropdown(false)}
                   >
                     <div className="px-4 py-2 border-b border-slate-100">
                       <p className="text-xs font-bold text-slate-800 truncate">{userName}</p>
                       {caderninhoLimit !== undefined && (
-                        <p className="text-[11px] text-emerald-600 font-extrabold mt-0.5">
+                        <p className="user-caderninho-limit text-[11px] text-emerald-600 font-extrabold mt-0.5">
                           Limite: R$ {caderninhoLimit.toFixed(2)}
                         </p>
                       )}
@@ -109,7 +109,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <button
                       type="button"
                       onClick={() => onLogout?.()}
-                      className="w-full text-left px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 flex items-center gap-2 transition"
+                      className="user-logout-btn w-full text-left px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 flex items-center gap-2 transition"
                     >
                       <LogOut size={14} />
                       <span>Sair do Caderninho</span>
@@ -121,7 +121,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={onOpenAuth}
-                className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-mateus-blue-700/80 hover:bg-mateus-blue-700 text-white transition text-xs font-semibold border border-mateus-blue-500/40"
+                className="header-user-btn flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-mateus-blue-700/80 hover:bg-mateus-blue-700 text-white transition text-xs font-semibold border border-mateus-blue-500/40"
                 title="Fazer login ou cadastrar"
               >
                 <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-mateus-blue-800 flex items-center justify-center shrink-0">
@@ -143,12 +143,12 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               onClick={onOpenCart}
               aria-label={`Cesta de compras com ${cartItemCount} itens`}
-              className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-mateus-red hover:bg-mateus-red-hover text-white font-extrabold text-xs sm:text-sm shadow-heart transition transform hover:scale-105 active:scale-95"
+              className="header-cart-btn relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-mateus-red hover:bg-mateus-red-hover text-white font-extrabold text-xs sm:text-sm shadow-heart transition transform hover:scale-105 active:scale-95"
             >
               <ShoppingCart size={18} />
               <span className="hidden sm:inline">Cesta</span>
               {cartItemCount > 0 && (
-                <span className="inline-flex items-center justify-center min-w-[18px] sm:min-w-[20px] h-4 sm:h-5 px-1 rounded-full bg-white text-mateus-red text-[11px] font-black shadow">
+                <span className="header-cart-badge inline-flex items-center justify-center min-w-[18px] sm:min-w-[20px] h-4 sm:h-5 px-1 rounded-full bg-white text-mateus-red text-[11px] font-black shadow">
                   {cartItemCount}
                 </span>
               )}

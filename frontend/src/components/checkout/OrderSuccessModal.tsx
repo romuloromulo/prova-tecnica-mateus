@@ -19,7 +19,7 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({ order, onC
       aria-labelledby="success-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/70 backdrop-blur-xs animate-in fade-in"
     >
-      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-200">
+      <div className="modal-panel relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-200">
         {/* Banner de Celebração com o Dentinho */}
         <div className="p-6 bg-gradient-to-r from-mateus-blue-900 via-mateus-blue to-mateus-blue-800 text-white text-center relative overflow-hidden">
           <div className="relative z-10 flex flex-col items-center">

@@ -69,28 +69,411 @@ body.font-size-xl .text-3xl { font-size: 2.45rem !important; }
 body.font-size-xl .text-4xl { font-size: 3.0rem !important; }
 body.font-size-xl .text-5xl { font-size: 3.8rem !important; }
 
-/* Alto Contraste */
+/* ==========================================================================
+   ALTO CONTRASTE INTEGRAL (WCAG 2.1 AAA - 7:1+ a 21:1 Contrast Ratio)
+   Projetado especificamente para acessibilidade de baixa visão (Persona Dona Marta)
+   ========================================================================== */
 body.high-contrast {
   --color-surface: #000000;
-  --color-surface-card: #121212;
+  --color-surface-card: #0a0a0a;
   background-color: #000000 !important;
   color: #ffffff !important;
 }
 
-body.high-contrast * {
-  border-color: #ffffff !important;
+body.high-contrast :focus-visible {
+  outline: 3px solid #facc15 !important;
+  outline-offset: 2px !important;
 }
 
-body.high-contrast .bg-white,
-body.high-contrast .bg-mateus-surface {
-  background-color: #121212 !important;
+/* 1. Reset Tipográfico e Cores Universais de Texto */
+body.high-contrast h1,
+body.high-contrast h2,
+body.high-contrast h3,
+body.high-contrast h4,
+body.high-contrast h5,
+body.high-contrast h6,
+body.high-contrast p,
+body.high-contrast label,
+body.high-contrast strong,
+body.high-contrast span,
+body.high-contrast div,
+body.high-contrast li,
+body.high-contrast dd,
+body.high-contrast dt {
+  color: #ffffff;
+}
+
+/* Sobrescreve classes utilitárias de texto para Branco Puro (21:1) */
+body.high-contrast [class*="text-slate-"],
+body.high-contrast [class*="text-gray-"],
+body.high-contrast [class*="text-zinc-"],
+body.high-contrast [class*="text-neutral-"],
+body.high-contrast [class*="text-mateus-"] {
   color: #ffffff !important;
 }
 
-body.high-contrast .text-slate-600,
-body.high-contrast .text-slate-500,
-body.high-contrast .text-slate-700 {
+/* 2. Destaques Financeiros e Textos em Amarelo Ouro de Altíssimo Contraste (16.5:1) */
+body.high-contrast .product-price,
+body.high-contrast .product-price *,
+body.high-contrast .user-caderninho-limit,
+body.high-contrast .cart-subtotal-price,
+body.high-contrast .cart-total-price,
+body.high-contrast .text-mateus-blue.font-black,
+body.high-contrast .text-mateus-blue.font-extrabold {
+  color: #facc15 !important;
+}
+body.high-contrast .product-price-label,
+body.high-contrast .product-price-unit {
   color: #f1f5f9 !important;
+}
+
+/* 3. Textos Semânticos de Sucesso, Erro e Alerta no Fundo Preto */
+body.high-contrast .text-emerald-400,
+body.high-contrast .text-emerald-500,
+body.high-contrast .text-emerald-600,
+body.high-contrast .text-emerald-700,
+body.high-contrast .text-emerald-800,
+body.high-contrast .text-emerald-900,
+body.high-contrast .text-green-500,
+body.high-contrast .text-green-600,
+body.high-contrast .text-green-700 {
+  color: #86efac !important; /* Menta brilhante (13:1) */
+}
+
+body.high-contrast .text-rose-400,
+body.high-contrast .text-rose-500,
+body.high-contrast .text-rose-600,
+body.high-contrast .text-rose-700,
+body.high-contrast .text-rose-800,
+body.high-contrast .text-rose-900,
+body.high-contrast .text-red-500,
+body.high-contrast .text-red-600,
+body.high-contrast .text-red-700 {
+  color: #fca5a5 !important; /* Rosa pastel brilhante (11:1) */
+}
+
+body.high-contrast .text-amber-500,
+body.high-contrast .text-amber-600,
+body.high-contrast .text-amber-700,
+body.high-contrast .text-amber-800,
+body.high-contrast .text-amber-900,
+body.high-contrast .text-yellow-600,
+body.high-contrast .text-yellow-700 {
+  color: #fde047 !important; /* Amarelo vivo (16:1) */
+}
+
+/* 4. Superfícies, Cards, Artigos, Seções e Navs */
+body.high-contrast main,
+body.high-contrast article,
+body.high-contrast section,
+body.high-contrast nav,
+body.high-contrast header,
+body.high-contrast footer,
+body.high-contrast aside,
+body.high-contrast .product-card,
+body.high-contrast .bg-white,
+body.high-contrast .bg-mateus-surface,
+body.high-contrast .bg-slate-50,
+body.high-contrast .bg-slate-100,
+body.high-contrast .bg-slate-200,
+body.high-contrast [class*="bg-slate-50/"],
+body.high-contrast [class*="bg-white/"],
+body.high-contrast [class*="bg-mateus-blue-50"],
+body.high-contrast [class*="bg-mateus-sky-50"],
+body.high-contrast [class*="bg-blue-50"] {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.high-contrast [class*="bg-gradient-"] {
+  background: #000000 !important;
+}
+
+/* 5. Bordas e Separadores Estruturais */
+body.high-contrast .border,
+body.high-contrast .border-t,
+body.high-contrast .border-b,
+body.high-contrast .border-l,
+body.high-contrast .border-r,
+body.high-contrast .border-2,
+body.high-contrast [class*="border-slate-"],
+body.high-contrast [class*="border-gray-"],
+body.high-contrast [class*="border-mateus-"],
+body.high-contrast .product-card,
+body.high-contrast section,
+body.high-contrast article {
+  border-color: #ffffff !important;
+}
+
+/* 6. REGRA DE OURO: Elementos com Fundo Amarelo/Dourado (16.5:1)
+      Texto, ícones e SVGs DEVE ser PRETO ABSOLUTO (#000000) */
+body.high-contrast .bg-amber-400,
+body.high-contrast .bg-amber-300,
+body.high-contrast .bg-yellow-400,
+body.high-contrast .bg-yellow-300,
+body.high-contrast .bg-mateus-red,
+body.high-contrast .header-cart-btn,
+body.high-contrast .product-badge-promo {
+  background-color: #facc15 !important;
+  color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  font-weight: 900 !important;
+}
+body.high-contrast .bg-amber-400 *,
+body.high-contrast .bg-amber-300 *,
+body.high-contrast .bg-yellow-400 *,
+body.high-contrast .bg-yellow-300 *,
+body.high-contrast .bg-mateus-red *,
+body.high-contrast .header-cart-btn *,
+body.high-contrast .product-badge-promo * {
+  color: #000000 !important;
+  fill: #000000 !important;
+  stroke: #000000 !important;
+}
+
+/* Exceção: Badge numérica do carrinho dentro do botão da cesta */
+body.high-contrast .header-cart-badge {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #000000 !important;
+}
+body.high-contrast .header-cart-badge * {
+  color: #ffffff !important;
+}
+
+/* 7. Badges Flutuantes dos Produtos */
+body.high-contrast .product-badge-category {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 0 0 1px #000000 !important;
+}
+body.high-contrast .product-badge-unit {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1.5px solid #ffffff !important;
+  box-shadow: 0 0 0 1px #000000 !important;
+}
+
+/* 8. Badges e Caixas Semânticas de Estoque e Status */
+body.high-contrast .stock-badge-out,
+body.high-contrast .bg-rose-50,
+body.high-contrast [class*="bg-rose-50/"] {
+  background-color: #000000 !important;
+  border: 2px solid #ef4444 !important;
+  color: #fca5a5 !important;
+}
+body.high-contrast .stock-badge-out *,
+body.high-contrast .bg-rose-50 *,
+body.high-contrast [class*="bg-rose-50/"] * {
+  color: #fca5a5 !important;
+}
+
+body.high-contrast .stock-badge-low,
+body.high-contrast .bg-amber-50,
+body.high-contrast [class*="bg-amber-50/"] {
+  background-color: #000000 !important;
+  border: 2px solid #facc15 !important;
+  color: #fde047 !important;
+}
+body.high-contrast .stock-badge-low *,
+body.high-contrast .bg-amber-50 *,
+body.high-contrast [class*="bg-amber-50/"] * {
+  color: #fde047 !important;
+}
+
+body.high-contrast .stock-badge-ok,
+body.high-contrast .bg-emerald-50,
+body.high-contrast [class*="bg-emerald-50/"] {
+  background-color: #000000 !important;
+  border: 2px solid #22c55e !important;
+  color: #86efac !important;
+}
+body.high-contrast .stock-badge-ok *,
+body.high-contrast .bg-emerald-50 *,
+body.high-contrast [class*="bg-emerald-50/"] * {
+  color: #86efac !important;
+}
+
+/* 9. Botões de Ação e Interatividade Geral */
+body.high-contrast .bg-mateus-blue,
+body.high-contrast .bg-mateus-blue-700,
+body.high-contrast .bg-mateus-blue-800,
+body.high-contrast .bg-mateus-blue-900 {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+/* Estados Selecionados (Radio, Tabs, Entrega, Pagamento, Categorias) */
+body.high-contrast [data-selected="true"],
+body.high-contrast [aria-checked="true"],
+body.high-contrast [aria-selected="true"],
+body.high-contrast [aria-pressed="true"],
+body.high-contrast nav button[aria-current="page"] {
+  background-color: #1a1a1a !important;
+  border: 3px solid #facc15 !important;
+  box-shadow: 0 0 0 2px #facc15 !important;
+  color: #ffffff !important;
+}
+
+body.high-contrast [data-selected="true"] .font-black,
+body.high-contrast [aria-checked="true"] .font-black,
+body.high-contrast [aria-selected="true"] .font-black,
+body.high-contrast nav button[aria-current="page"] {
+  color: #facc15 !important;
+}
+
+/* Aba de Navegação Ativa com Fundo Ouro */
+body.high-contrast nav button[aria-current="page"] {
+  background-color: #facc15 !important;
+  color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  font-weight: 900 !important;
+}
+body.high-contrast nav button[aria-current="page"] * {
+  color: #000000 !important;
+  fill: #000000 !important;
+}
+
+/* Botões Não-Selecionados em Grupos */
+body.high-contrast [data-selected="false"],
+body.high-contrast [aria-checked="false"],
+body.high-contrast nav button:not([aria-current="page"]) {
+  background-color: #000000 !important;
+  border: 2px solid #666666 !important;
+  color: #ffffff !important;
+}
+
+/* 10. Steppers de Quantidade */
+body.high-contrast [role="group"][aria-label*="cesta"],
+body.high-contrast .cart-stepper {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+body.high-contrast [role="group"][aria-label*="cesta"] button,
+body.high-contrast .cart-stepper button {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+}
+body.high-contrast [role="group"][aria-label*="cesta"] span,
+body.high-contrast .cart-stepper span {
+  color: #facc15 !important;
+  font-weight: 900 !important;
+}
+
+/* Botão de Excluir Item */
+body.high-contrast .cart-item-remove-btn {
+  background-color: #000000 !important;
+  border: 1.5px solid #ef4444 !important;
+  color: #fca5a5 !important;
+}
+body.high-contrast .cart-item-remove-btn:hover {
+  background-color: #ef4444 !important;
+  color: #000000 !important;
+}
+
+/* 11. Formulários, Inputs, Textareas e Seletores */
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+body.high-contrast input::placeholder,
+body.high-contrast textarea::placeholder {
+  color: #cbd5e1 !important;
+}
+body.high-contrast input:focus,
+body.high-contrast select:focus,
+body.high-contrast textarea:focus {
+  border-color: #facc15 !important;
+  outline: 3px solid #facc15 !important;
+  outline-offset: 1px !important;
+}
+body.high-contrast input:read-only,
+body.high-contrast input[disabled],
+body.high-contrast button[disabled],
+body.high-contrast [disabled] {
+  background-color: #1a1a1a !important;
+  border-color: #666666 !important;
+  color: #888888 !important;
+  opacity: 1 !important;
+}
+
+/* 12. Header, Barra de Acessibilidade e Footer */
+body.high-contrast header {
+  background-color: #000000 !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+body.high-contrast header input[type="search"] {
+  border: 2px solid #ffffff !important;
+}
+body.high-contrast header .header-user-btn {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+}
+body.high-contrast header .header-user-dropdown {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+body.high-contrast header .user-logout-btn {
+  border-top: 1px solid #ef4444 !important;
+  color: #fca5a5 !important;
+}
+
+body.high-contrast aside[aria-label="Barra de acessibilidade"] {
+  background-color: #000000 !important;
+  border-bottom: 2px solid #facc15 !important;
+}
+body.high-contrast aside[aria-label="Barra de acessibilidade"] .a11y-btn {
+  border: 2px solid #ffffff !important;
+}
+
+body.high-contrast footer {
+  background-color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+}
+
+/* 13. Modais, Painéis Deslizantes e Diálogos */
+body.high-contrast .cart-drawer-panel,
+body.high-contrast .auth-modal-panel,
+body.high-contrast .modal-panel,
+body.high-contrast [role="dialog"] > div:not([class*="fixed inset-0"]):not([class*="pointer-events-none"]) {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+body.high-contrast [class*="bg-slate-900/60"],
+body.high-contrast [class*="bg-slate-900/70"] {
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  border: none !important;
+}
+
+/* 14. Dica do Dentinho e Regiões de Notificação */
+body.high-contrast [role="region"][aria-label*="Dentinho"] {
+  background-color: #000000 !important;
+  border: 2px solid #facc15 !important;
+}
+
+/* 15. Chips de Filtro Ativo no Catálogo */
+body.high-contrast .inline-flex.rounded-full[class*="bg-mateus-blue-50"],
+body.high-contrast .inline-flex.rounded-full[class*="bg-amber-50"] {
+  background-color: #000000 !important;
+  border: 1.5px solid #ffffff !important;
+  color: #ffffff !important;
+}
+body.high-contrast .inline-flex.rounded-full[class*="bg-mateus-blue-50"] *,
+body.high-contrast .inline-flex.rounded-full[class*="bg-amber-50"] * {
+  color: #ffffff !important;
+}
+
+/* 16. Imagens com Filtro de Nitidez */
+body.high-contrast img {
+  filter: contrast(1.15) brightness(1.05);
 }
 
 /* Custom Scrollbar */

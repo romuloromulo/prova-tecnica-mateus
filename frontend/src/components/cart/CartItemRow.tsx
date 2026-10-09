@@ -31,7 +31,7 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
             (e.target as HTMLImageElement).src = '/favicon.svg';
           }}
         />
-        <span className="absolute bottom-1 right-1 text-[9px] font-black uppercase tracking-wider px-1 py-0.5 rounded bg-mateus-blue/90 text-white">
+        <span className="product-badge-unit absolute bottom-1 right-1 text-[9px] font-black uppercase tracking-wider px-1 py-0.5 rounded bg-mateus-blue/90 text-white">
           {product.unit}
         </span>
       </div>
@@ -53,7 +53,7 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
             type="button"
             onClick={() => onRemove(product.id)}
             aria-label={`Remover ${product.name} da cesta`}
-            className="text-slate-400 hover:text-mateus-red p-1 rounded-lg hover:bg-rose-50 transition-colors"
+            className="cart-item-remove-btn text-slate-400 hover:text-mateus-red p-1 rounded-lg hover:bg-rose-50 transition-colors"
             title="Remover produto da cesta"
           >
             <Trash2 size={16} />
@@ -63,7 +63,11 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
         {/* Controles de Quantidade e Subtotal */}
         <div className="mt-3 flex items-center justify-between gap-2">
           {/* Controles de incremento/decremento com toque amplo para acessibilidade */}
-          <div className="inline-flex items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200 shadow-xs">
+          <div
+            role="group"
+            aria-label={`Quantidade de ${product.name} na cesta`}
+            className="cart-stepper inline-flex items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200 shadow-xs"
+          >
             <button
               type="button"
               onClick={() => onUpdateQuantity(product.id, quantity - 1)}

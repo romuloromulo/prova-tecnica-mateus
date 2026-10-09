@@ -54,7 +54,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200"
+        className="auth-modal-panel relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabeçalho com Mascote Dentinho e Marca Grupo Mateus */}
@@ -93,9 +93,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
 
           {/* Abas Alternáveis */}
-          <div className="mt-5 grid grid-cols-2 p-1 rounded-xl bg-mateus-blue-900/50 backdrop-blur-sm border border-white/10">
+          <div role="tablist" aria-label="Abas de acesso" className="mt-5 grid grid-cols-2 p-1 rounded-xl bg-mateus-blue-900/50 backdrop-blur-sm border border-white/10">
             <button
               type="button"
+              role="tab"
+              aria-selected={activeTab === 'login'}
+              data-selected={activeTab === 'login'}
               onClick={() => setActiveTab('login')}
               className={`flex items-center justify-center gap-2 py-2 rounded-lg font-bold text-xs sm:text-sm transition ${
                 activeTab === 'login'
@@ -108,6 +111,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </button>
             <button
               type="button"
+              role="tab"
+              aria-selected={activeTab === 'register'}
+              data-selected={activeTab === 'register'}
               onClick={() => setActiveTab('register')}
               className={`flex items-center justify-center gap-2 py-2 rounded-lg font-bold text-xs sm:text-sm transition ${
                 activeTab === 'register'

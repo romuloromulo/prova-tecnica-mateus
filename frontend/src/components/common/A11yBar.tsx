@@ -29,7 +29,7 @@ export const A11yBar: React.FC = () => {
             disabled={fontSize === 'normal'}
             aria-label="Diminuir tamanho da fonte"
             title="Diminuir tamanho do texto"
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-mateus-blue-800 hover:bg-mateus-blue-700 disabled:opacity-30 disabled:cursor-not-allowed text-white font-bold transition cursor-pointer"
+            className="a11y-btn flex items-center gap-1 px-2.5 py-1 rounded-lg bg-mateus-blue-800 hover:bg-mateus-blue-700 disabled:opacity-30 disabled:cursor-not-allowed text-white font-bold transition cursor-pointer"
           >
             <ZoomOut size={14} aria-hidden="true" />
             <span>A-</span>
@@ -41,7 +41,7 @@ export const A11yBar: React.FC = () => {
             onClick={resetFont}
             aria-label={`Tamanho do texto atual: ${zoomLabel}. Clique para redefinir ao padrão`}
             title="Redefinir tamanho do texto para padrão (100%)"
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+            className={`a11y-btn flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
               fontSize === 'normal'
                 ? 'bg-mateus-sky-500 text-white shadow-xs'
                 : 'bg-mateus-blue-800 hover:bg-mateus-blue-700 text-mateus-sky-200'
@@ -58,7 +58,7 @@ export const A11yBar: React.FC = () => {
             disabled={fontSize === 'xl'}
             aria-label="Aumentar tamanho da fonte"
             title="Aumentar tamanho do texto (Ideal para leitura confortável)"
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+            className={`a11y-btn flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
               fontSize !== 'normal'
                 ? 'bg-amber-400 text-slate-950 shadow-xs'
                 : 'bg-mateus-blue-800 hover:bg-mateus-blue-700 disabled:opacity-30 disabled:cursor-not-allowed text-white'
@@ -76,7 +76,7 @@ export const A11yBar: React.FC = () => {
             aria-pressed={highContrast}
             aria-label={highContrast ? 'Desativar alto contraste' : 'Ativar alto contraste'}
             title="Alternar modo de alto contraste para maior nitidez"
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition ml-1 sm:ml-2 cursor-pointer ${
+            className={`a11y-btn flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition ml-1 sm:ml-2 cursor-pointer ${
               highContrast
                 ? 'bg-yellow-400 text-black ring-2 ring-white shadow-xs'
                 : 'bg-mateus-blue-800 hover:bg-mateus-blue-700 text-white'

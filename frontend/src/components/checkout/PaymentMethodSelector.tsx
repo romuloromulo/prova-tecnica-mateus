@@ -19,18 +19,21 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
         Escolha a Forma de Pagamento
       </label>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+      <div role="radiogroup" aria-label="Escolha a Forma de Pagamento" className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
         {/* Opção 1: Caderninho Digital de 1987 */}
         <button
           type="button"
+          role="radio"
+          aria-checked={selected === 'CADERNINHO'}
+          data-selected={selected === 'CADERNINHO'}
           onClick={() => onSelect('CADERNINHO')}
-          className={`relative p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
+          className={`payment-method-card relative p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
             selected === 'CADERNINHO'
               ? 'border-mateus-blue bg-mateus-blue-50/70 shadow-soft ring-2 ring-mateus-blue/20'
               : 'border-slate-200 bg-white hover:border-mateus-sky-300 hover:bg-slate-50/50'
           }`}
         >
-          <span className="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[10px] font-black shadow-xs flex items-center gap-0.5">
+          <span className="payment-method-badge absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[10px] font-black shadow-xs flex items-center gap-0.5">
             <Sparkles size={11} /> Tradição 1987
           </span>
 
@@ -55,14 +58,17 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
         {/* Opção 2: PIX Instantâneo */}
         <button
           type="button"
+          role="radio"
+          aria-checked={selected === 'PIX'}
+          data-selected={selected === 'PIX'}
           onClick={() => onSelect('PIX')}
-          className={`relative p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
+          className={`payment-method-card relative p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
             selected === 'PIX'
               ? 'border-emerald-600 bg-emerald-50/70 shadow-soft ring-2 ring-emerald-600/20'
               : 'border-slate-200 bg-white hover:border-emerald-300 hover:bg-slate-50/50'
           }`}
         >
-          <span className="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-black shadow-xs">
+          <span className="payment-method-badge absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-black shadow-xs">
             Aprovação Instantânea
           </span>
 
@@ -85,14 +91,17 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
         {/* Opção 3: Cartão de Crédito */}
         <button
           type="button"
+          role="radio"
+          aria-checked={selected === 'CARTAO_CREDITO'}
+          data-selected={selected === 'CARTAO_CREDITO'}
           onClick={() => onSelect('CARTAO_CREDITO')}
-          className={`relative p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
+          className={`payment-method-card relative p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
             selected === 'CARTAO_CREDITO'
               ? 'border-mateus-red bg-rose-50/60 shadow-soft ring-2 ring-mateus-red/20'
               : 'border-slate-200 bg-white hover:border-mateus-red/40 hover:bg-slate-50/50'
           }`}
         >
-          <span className="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-mateus-red text-white text-[10px] font-black shadow-xs">
+          <span className="payment-method-badge absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-mateus-red text-white text-[10px] font-black shadow-xs">
             Até 3x Sem Juros
           </span>
 

@@ -120,7 +120,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
         {/* Painel Deslizante Moderno (slide in / slide out suave pela direita) */}
         <div
           ref={drawerRef}
-          className={`w-screen max-w-md sm:max-w-lg bg-white shadow-2xl flex flex-col pointer-events-auto transform transition-transform duration-300 ease-in-out ${
+          className={`cart-drawer-panel w-screen max-w-md sm:max-w-lg bg-white shadow-2xl flex flex-col pointer-events-auto transform transition-transform duration-300 ease-in-out ${
             isVisible ? 'translate-x-0' : 'translate-x-full'
           }`}
         >

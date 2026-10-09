@@ -429,10 +429,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
                         <span>Como deseja receber suas compras?</span>
                       </h3>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div role="radiogroup" aria-label="Modo de Recebimento" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {/* Opção Expressa */}
                         <button
                           type="button"
+                          role="radio"
+                          aria-checked={deliveryType === 'express'}
+                          data-selected={deliveryType === 'express'}
                           onClick={() => setDeliveryType('express')}
                           className={`p-4 rounded-2xl text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
                             deliveryType === 'express'
@@ -457,6 +460,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
                         {/* Opção Retirada */}
                         <button
                           type="button"
+                          role="radio"
+                          aria-checked={deliveryType === 'pickup'}
+                          data-selected={deliveryType === 'pickup'}
                           onClick={() => setDeliveryType('pickup')}
                           className={`p-4 rounded-2xl text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
                             deliveryType === 'pickup'
@@ -494,9 +500,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
                           </span>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div role="radiogroup" aria-label="Janela de Horário para Entrega" className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           <button
                             type="button"
+                            role="radio"
+                            aria-checked={deliverySlot === 'express'}
+                            data-selected={deliverySlot === 'express'}
                             onClick={() => setDeliverySlot('express')}
                             className={`p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer ${
                               deliverySlot === 'express'
@@ -516,6 +525,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
 
                           <button
                             type="button"
+                            role="radio"
+                            aria-checked={deliverySlot === 'night'}
+                            data-selected={deliverySlot === 'night'}
                             onClick={() => setDeliverySlot('night')}
                             className={`p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer ${
                               deliverySlot === 'night'
@@ -530,6 +542,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
 
                           <button
                             type="button"
+                            role="radio"
+                            aria-checked={deliverySlot === 'tomorrow_morning'}
+                            data-selected={deliverySlot === 'tomorrow_morning'}
                             onClick={() => setDeliverySlot('tomorrow_morning')}
                             className={`p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer ${
                               deliverySlot === 'tomorrow_morning'
@@ -751,9 +766,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
                         </h3>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div role="radiogroup" aria-label="Preferência de Substituição de Produtos" className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <button
                           type="button"
+                          role="radio"
+                          aria-checked={replacementPolicy === 'similar'}
+                          data-selected={replacementPolicy === 'similar'}
                           onClick={() => setReplacementPolicy('similar')}
                           className={`p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer ${
                             replacementPolicy === 'similar'
@@ -771,6 +789,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
 
                         <button
                           type="button"
+                          role="radio"
+                          aria-checked={replacementPolicy === 'contact'}
+                          data-selected={replacementPolicy === 'contact'}
                           onClick={() => setReplacementPolicy('contact')}
                           className={`p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer ${
                             replacementPolicy === 'contact'
@@ -788,6 +809,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
 
                         <button
                           type="button"
+                          role="radio"
+                          aria-checked={replacementPolicy === 'cancel'}
+                          data-selected={replacementPolicy === 'cancel'}
                           onClick={() => setReplacementPolicy('cancel')}
                           className={`p-3.5 rounded-2xl text-left border-2 transition-all cursor-pointer ${
                             replacementPolicy === 'cancel'
