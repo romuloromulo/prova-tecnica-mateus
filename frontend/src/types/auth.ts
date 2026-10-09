@@ -3,7 +3,7 @@ export interface User {
   name: string;
   email: string;
   role?: 'ROLE_USER' | 'ROLE_ADMIN';
-  caderninhoLimit?: number; // Limite de crédito do caderninho digital
+  caderninhoLimit?: number;
 }
 
 export interface LoginCredentials {
@@ -21,5 +21,25 @@ export interface RegisterData {
 
 export interface AuthResponse {
   token: string;
+  tokenType?: string;
+  userId?: number;
+  id?: number;
+  name: string;
+  email: string;
+  caderninhoLimit?: number;
+}
+
+export interface AuthSession {
+  token: string;
   user: User;
+}
+
+export interface UserProfileResponse {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  caderninhoLimit?: number;
+  role?: string;
+  createdAt?: string;
 }

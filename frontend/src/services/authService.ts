@@ -1,12 +1,19 @@
 import api from './api';
-import type { LoginCredentials, RegisterData, AuthResponse, User } from '../types/auth';
+import type {
+  LoginCredentials,
+  RegisterData,
+  AuthResponse,
+  AuthSession,
+  User,
+  UserProfileResponse,
+} from '../types/auth';
 
 export const authService = {
-  async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await api.post<any>('/auth/login', credentials);
+  async login(credentials: LoginCredentials): Promise<AuthSession> {
+    const response = await api.post<AuthResponse>('/auth/login', credentials);
     const data = response.data;
-    const user: User = data.user || {
-      id: data.userId || data.id,
+    const user: User = {
+      id: data.userId ?? data.id ?? 1,
       name: data.name,
       email: data.email,
       caderninhoLimit: Number(data.caderninhoLimit ?? 800),
@@ -17,11 +24,11 @@ export const authService = {
     };
   },
 
-  async register(data: RegisterData): Promise<AuthResponse> {
-    const response = await api.post<any>('/auth/register', data);
+  async register(data: RegisterData): Promise<AuthSession> {
+    const response = await api.post<AuthResponse>('/auth/register', data);
     const resData = response.data;
-    const user: User = resData.user || {
-      id: resData.userId || resData.id,
+    const user: User = {
+      id: resData.userId ?? resData.id ?? Date.now(),
       name: resData.name,
       email: resData.email,
       caderninhoLimit: Number(resData.caderninhoLimit ?? 800),
@@ -33,10 +40,10 @@ export const authService = {
   },
 
   async getProfile(): Promise<User> {
-    const response = await api.get<any>('/auth/me');
+    const response = await api.get<UserProfileResponse>('/auth/me');
     const data = response.data;
     return {
-      id: data.userId || data.id,
+      id: data.id,
       name: data.name,
       email: data.email,
       caderninhoLimit: Number(data.caderninhoLimit ?? 800),
