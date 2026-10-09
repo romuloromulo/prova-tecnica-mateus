@@ -17,11 +17,19 @@ export interface Product {
   isPromotion?: boolean;
 }
 
+export type ProductSortOption =
+  | 'default'
+  | 'price_asc'
+  | 'price_desc'
+  | 'name_asc'
+  | 'name_desc';
+
 export interface ProductFilterParams {
   category?: ProductCategory | 'all';
   search?: string;
   page?: number;
   size?: number;
+  sort?: ProductSortOption;
 }
 
 export interface PaginatedProducts {

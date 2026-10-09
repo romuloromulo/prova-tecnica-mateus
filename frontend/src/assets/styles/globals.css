@@ -283,15 +283,19 @@ body.high-contrast [class*="bg-amber-50/"] * {
 }
 
 body.high-contrast .stock-badge-ok,
+body.high-contrast .pix-copied-banner,
 body.high-contrast .bg-emerald-50,
-body.high-contrast [class*="bg-emerald-50/"] {
+body.high-contrast [class*="bg-emerald-50/"],
+body.high-contrast [class*="bg-emerald-100/"] {
   background-color: #000000 !important;
   border: 2px solid #22c55e !important;
   color: #86efac !important;
 }
 body.high-contrast .stock-badge-ok *,
+body.high-contrast .pix-copied-banner *,
 body.high-contrast .bg-emerald-50 *,
-body.high-contrast [class*="bg-emerald-50/"] * {
+body.high-contrast [class*="bg-emerald-50/"] *,
+body.high-contrast [class*="bg-emerald-100/"] * {
   color: #86efac !important;
 }
 
@@ -461,13 +465,15 @@ body.high-contrast [role="region"][aria-label*="Dentinho"] {
 
 /* 15. Chips de Filtro Ativo no Catálogo */
 body.high-contrast .inline-flex.rounded-full[class*="bg-mateus-blue-50"],
-body.high-contrast .inline-flex.rounded-full[class*="bg-amber-50"] {
+body.high-contrast .inline-flex.rounded-full[class*="bg-amber-50"],
+body.high-contrast .inline-flex.rounded-full[class*="bg-violet-50"] {
   background-color: #000000 !important;
   border: 1.5px solid #ffffff !important;
   color: #ffffff !important;
 }
 body.high-contrast .inline-flex.rounded-full[class*="bg-mateus-blue-50"] *,
-body.high-contrast .inline-flex.rounded-full[class*="bg-amber-50"] * {
+body.high-contrast .inline-flex.rounded-full[class*="bg-amber-50"] *,
+body.high-contrast .inline-flex.rounded-full[class*="bg-violet-50"] * {
   color: #ffffff !important;
 }
 

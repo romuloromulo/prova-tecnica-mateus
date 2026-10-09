@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ProductCard } from './ProductCard';
 import { PaginationBar } from './PaginationBar';
 import { productService } from '@/services/productService';
-import type { ProductCategory, PaginatedProducts } from '@/types/product';
-import { Sparkles, RefreshCcw, Filter, X, ArrowLeft } from 'lucide-react';
+import type { ProductCategory, PaginatedProducts, ProductSortOption } from '@/types/product';
+import { Sparkles, RefreshCcw, Filter, X, ArrowLeft, ArrowUpDown } from 'lucide-react';
 
 interface ProductGridProps {
   selectedCategory?: ProductCategory | 'all';
@@ -48,6 +48,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   onAddedFeedback,
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedSort, setSelectedSort] = useState<ProductSortOption>('default');
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<PaginatedProducts>({
     content: [],
@@ -73,6 +74,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         search: searchTerm,
         page: currentPage,
         size: 8,
+        sort: selectedSort,
       })
       .then((res) => {
         if (!isCancelled) {
@@ -99,7 +101,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     return () => {
       isCancelled = true;
     };
-  }, [selectedCategory, searchTerm, currentPage]);
+  }, [selectedCategory, searchTerm, currentPage, selectedSort]);
 
   const sectorInfo = sectorTitles[selectedCategory] || sectorTitles.all;
   const products = Array.isArray(data?.content) ? data.content : [];
@@ -107,13 +109,15 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const handleResetFilters = () => {
     onCategoryChange?.('all');
     onClearSearch?.();
+    setSelectedSort('default');
     setCurrentPage(1);
   };
 
   return (
     <section id="catalogo-produtos" aria-labelledby="catalog-heading" className="scroll-mt-32 space-y-6">
       {/* Barra de Navegação Estrutural / Breadcrumb quando em setor específico ou busca */}
-      {(selectedCategory !== 'all' || searchTerm) && (
+      {/* Barra de Navegação Estrutural / Breadcrumb quando em setor específico, busca ou ordenação */}
+      {(selectedCategory !== 'all' || searchTerm || selectedSort !== 'default') && (
         <div className="flex items-center justify-between gap-2 p-3 sm:p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs animate-in fade-in duration-200">
           <nav aria-label="Navegação estrutural do catálogo" className="flex items-center gap-2 text-xs font-bold text-slate-500 flex-wrap">
             <button
@@ -141,7 +145,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
       )}
 
       {/* Cabeçalho do Setor Ativo & Filtros Aplicados */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-2 border-b border-slate-200/80">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-3 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-1.5 text-mateus-sky-600 text-xs font-black uppercase tracking-wider">
             <Sparkles size={14} />
@@ -163,7 +167,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           </p>
 
           {/* Tags de Filtros Ativos com Botão de Limpar */}
-          {(selectedCategory !== 'all' || searchTerm) && (
+          {(selectedCategory !== 'all' || searchTerm || selectedSort !== 'default') && (
             <div className="flex flex-wrap items-center gap-2 mt-2.5">
               <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1">
                 <Filter size={12} /> Filtros:
@@ -196,13 +200,62 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                   </button>
                 </span>
               )}
+
+              {selectedSort !== 'default' && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-violet-50 text-violet-800 border border-violet-200">
+                  <span>
+                    Ordem: {
+                      selectedSort === 'price_asc' ? 'Menor Preço' :
+                      selectedSort === 'price_desc' ? 'Maior Preço' :
+                      selectedSort === 'name_asc' ? 'Nome (A a Z)' : 'Nome (Z a A)'
+                    }
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedSort('default');
+                      setCurrentPage(1);
+                    }}
+                    aria-label="Remover ordenação personalizada"
+                    className="hover:text-mateus-red p-0.5 rounded-full cursor-pointer"
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              )}
             </div>
           )}
         </div>
 
-        <span className="text-xs font-bold text-slate-500 shrink-0 self-start sm:self-auto">
-          {loading ? 'Consultando prateleiras...' : `${data?.totalElements || 0} produtos encontrados`}
-        </span>
+        {/* Painel Lateral: Contagem e Seletor de Ordenação */}
+        <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-start sm:items-center md:items-end lg:items-center gap-2.5 shrink-0 self-start md:self-auto">
+          <span className="text-xs font-bold text-slate-500 whitespace-nowrap">
+            {loading ? 'Consultando prateleiras...' : `${data?.totalElements || 0} produtos encontrados`}
+          </span>
+
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 shadow-2xs">
+            <label htmlFor="product-sort-select" className="flex items-center gap-1 text-xs font-bold text-slate-500 cursor-pointer whitespace-nowrap">
+              <ArrowUpDown size={13} className="text-mateus-blue" />
+              <span>Ordenar:</span>
+            </label>
+            <select
+              id="product-sort-select"
+              value={selectedSort}
+              onChange={(e) => {
+                setSelectedSort(e.target.value as ProductSortOption);
+                setCurrentPage(1);
+              }}
+              className="bg-transparent text-xs font-extrabold text-slate-800 focus:outline-hidden cursor-pointer"
+              aria-label="Ordenar produtos do catálogo por preço ou nome"
+            >
+              <option value="default">Destaques / Relevância</option>
+              <option value="price_asc">Menor Preço (Mais Baratos)</option>
+              <option value="price_desc">Maior Preço</option>
+              <option value="name_asc">Nome (A a Z)</option>
+              <option value="name_desc">Nome (Z a A)</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       {/* Estados: Loading vs Vazio vs Grade de Cards */}

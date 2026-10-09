@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Copy, Check, Clock, Zap, AlertCircle, Heart } from 'lucide-react';
+import { Copy, Check, Clock, Zap, AlertCircle, Heart, CheckCircle2 } from 'lucide-react';
 import { generatePixBrCode } from '@/utils/paymentUtils';
 
 interface PixPaymentProps {
@@ -129,21 +129,33 @@ export const PixPayment: React.FC<PixPaymentProps> = ({
                 readOnly
                 value={pixKey}
                 aria-label="Código PIX Copia e Cola"
-                className="w-full bg-slate-50 text-slate-700 font-mono text-[11px] p-2.5 pr-24 rounded-xl border border-slate-300 select-all focus:outline-none"
+                className="w-full bg-slate-50 text-slate-700 font-mono text-[11px] p-2.5 pr-28 rounded-xl border border-slate-300 select-all focus:outline-none"
               />
               <button
                 type="button"
                 onClick={handleCopy}
-                className={`absolute right-1 top-1 bottom-1 px-3 rounded-lg text-xs font-bold flex items-center gap-1 transition cursor-pointer ${
+                aria-label={copied ? 'Código PIX copiado com sucesso' : 'Copiar código PIX para área de transferência'}
+                className={`absolute right-1 top-1 bottom-1 px-3 rounded-lg text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer ${
                   copied
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-mateus-blue hover:bg-mateus-blue-700 text-white'
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-300 scale-102'
+                    : 'bg-mateus-blue hover:bg-mateus-blue-700 active:scale-95 text-white'
                 }`}
               >
-                {copied ? <Check size={13} /> : <Copy size={13} />}
+                {copied ? <Check size={14} className="stroke-[3]" /> : <Copy size={13} />}
                 <span>{copied ? 'Copiado!' : 'Copiar'}</span>
               </button>
             </div>
+
+            {copied && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="pix-copied-banner flex items-center gap-2 p-2.5 rounded-xl bg-emerald-100/90 text-emerald-950 border border-emerald-300 text-xs font-bold shadow-xs animate-in fade-in slide-in-from-top-1 duration-200"
+              >
+                <CheckCircle2 size={16} className="text-emerald-700 shrink-0" />
+                <span>Código PIX copiado com sucesso! Abra o app do seu banco e cole na opção Pix Copia e Cola.</span>
+              </div>
+            )}
           </div>
 
           <div className="p-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-600 space-y-1">

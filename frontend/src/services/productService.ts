@@ -246,7 +246,33 @@ export const productService = {
    * Obtém a lista paginada e filtrada de produtos
    */
   async getProducts(params: ProductFilterParams = {}): Promise<PaginatedProducts> {
-    const { category = 'all', search = '', page = 1, size = 8 } = params;
+    const { category = 'all', search = '', page = 1, size = 8, sort = 'default' } = params;
+
+    let sortBy = 'id';
+    let direction = 'asc';
+
+    switch (sort) {
+      case 'price_asc':
+        sortBy = 'price';
+        direction = 'asc';
+        break;
+      case 'price_desc':
+        sortBy = 'price';
+        direction = 'desc';
+        break;
+      case 'name_asc':
+        sortBy = 'name';
+        direction = 'asc';
+        break;
+      case 'name_desc':
+        sortBy = 'name';
+        direction = 'desc';
+        break;
+      default:
+        sortBy = 'id';
+        direction = 'asc';
+        break;
+    }
 
     try {
       // 1. Requisição real à API RESTful Spring Boot
@@ -256,6 +282,8 @@ export const productService = {
           search: search ? search.trim() : undefined,
           page,
           size,
+          sortBy,
+          direction,
         },
       });
       if (response.data && Array.isArray(response.data.content)) {
@@ -280,6 +308,15 @@ export const productService = {
             p.description.toLowerCase().includes(query)
         );
       }
+
+      // Ordenação local para o fallback
+      filtered.sort((a, b) => {
+        if (sort === 'price_asc') return a.price - b.price;
+        if (sort === 'price_desc') return b.price - a.price;
+        if (sort === 'name_asc') return a.name.localeCompare(b.name, 'pt-BR');
+        if (sort === 'name_desc') return b.name.localeCompare(a.name, 'pt-BR');
+        return Number(a.id) - Number(b.id);
+      });
 
       // Paginação
       const totalElements = filtered.length;
