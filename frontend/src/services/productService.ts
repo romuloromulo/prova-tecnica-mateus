@@ -12,6 +12,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 28,
     category: 'hortifruti',
     unit: 'kg',
+    imageUrl: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500&auto=format&fit=crop&q=80',
     isPromotion: true,
   },
   {
@@ -22,6 +23,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 35,
     category: 'hortifruti',
     unit: 'kg',
+    imageUrl: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 103,
@@ -31,6 +33,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 18,
     category: 'hortifruti',
     unit: 'kg',
+    imageUrl: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500&auto=format&fit=crop&q=80',
     isPromotion: true,
   },
   {
@@ -41,6 +44,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 4, // Estoque baixo para testar alerta
     category: 'hortifruti',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 105,
@@ -50,6 +54,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 22,
     category: 'hortifruti',
     unit: 'kg',
+    imageUrl: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&auto=format&fit=crop&q=80',
   },
 
   // 🥩 Açougue & Carnes
@@ -61,6 +66,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 15,
     category: 'acougue',
     unit: 'kg',
+    imageUrl: 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=500&auto=format&fit=crop&q=80',
     isPromotion: true,
   },
   {
@@ -71,6 +77,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 24,
     category: 'acougue',
     unit: 'kg',
+    imageUrl: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 203,
@@ -80,6 +87,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 3, // Estoque baixo
     category: 'acougue',
     unit: 'kg',
+    imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 204,
@@ -89,6 +97,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 10,
     category: 'acougue',
     unit: 'kg',
+    imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500&auto=format&fit=crop&q=80',
     isPromotion: true,
   },
 
@@ -101,6 +110,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 40,
     category: 'padaria',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&auto=format&fit=crop&q=80',
     isPromotion: true,
   },
   {
@@ -111,6 +121,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 7,
     category: 'padaria',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 303,
@@ -120,6 +131,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 19,
     category: 'padaria',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1598142918077-849405d4baee?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 304,
@@ -129,6 +141,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 2, // Alerta de estoque crítico
     category: 'padaria',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&auto=format&fit=crop&q=80',
   },
 
   // 📦 Mercearia Básica
@@ -140,6 +153,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 30,
     category: 'mercearia',
     unit: 'pct',
+    imageUrl: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500&auto=format&fit=crop&q=80',
     isPromotion: true,
   },
   {
@@ -150,6 +164,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 45,
     category: 'mercearia',
     unit: 'pct',
+    imageUrl: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 403,
@@ -159,6 +174,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 32,
     category: 'mercearia',
     unit: 'pct',
+    imageUrl: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 404,
@@ -168,6 +184,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 50,
     category: 'mercearia',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 405,
@@ -177,6 +194,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 26,
     category: 'mercearia',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&auto=format&fit=crop&q=80',
   },
 
   // ✨ Higiene & Limpeza
@@ -188,6 +206,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 20,
     category: 'limpeza',
     unit: 'pct',
+    imageUrl: 'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=500&auto=format&fit=crop&q=80',
     isPromotion: true,
   },
   {
@@ -198,6 +217,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 60,
     category: 'limpeza',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 503,
@@ -207,6 +227,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 14,
     category: 'limpeza',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1584813470613-5b1c1cad3d69?w=500&auto=format&fit=crop&q=80',
   },
   {
     id: 504,
@@ -216,6 +237,7 @@ const MOCK_PRODUCTS: Product[] = [
     stockQuantity: 18,
     category: 'limpeza',
     unit: 'un',
+    imageUrl: 'https://images.unsplash.com/photo-1584634731339-252c581abfc5?w=500&auto=format&fit=crop&q=80',
   },
 ];
 

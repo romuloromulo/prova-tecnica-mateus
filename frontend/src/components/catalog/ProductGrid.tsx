@@ -3,7 +3,7 @@ import { ProductCard } from './ProductCard';
 import { PaginationBar } from './PaginationBar';
 import { productService } from '@/services/productService';
 import type { ProductCategory, PaginatedProducts } from '@/types/product';
-import { Sparkles, RefreshCcw, Filter, X } from 'lucide-react';
+import { Sparkles, RefreshCcw, Filter, X, ArrowLeft } from 'lucide-react';
 
 interface ProductGridProps {
   selectedCategory?: ProductCategory | 'all';
@@ -112,6 +112,34 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
 
   return (
     <section id="catalogo-produtos" aria-labelledby="catalog-heading" className="scroll-mt-32 space-y-6">
+      {/* Barra de Navegação Estrutural / Breadcrumb quando em setor específico ou busca */}
+      {(selectedCategory !== 'all' || searchTerm) && (
+        <div className="flex items-center justify-between gap-2 p-3 sm:p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs animate-in fade-in duration-200">
+          <nav aria-label="Navegação estrutural do catálogo" className="flex items-center gap-2 text-xs font-bold text-slate-500 flex-wrap">
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="text-mateus-blue hover:text-mateus-blue-700 hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              <span>Início (Todos os Setores)</span>
+            </button>
+            <span className="text-slate-300">/</span>
+            <span className="text-slate-800 font-extrabold">
+              {searchTerm ? `Busca: "${searchTerm}"` : sectorInfo.title}
+            </span>
+          </nav>
+
+          <button
+            type="button"
+            onClick={handleResetFilters}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-mateus-blue-50 hover:bg-mateus-blue-100 text-mateus-blue border border-mateus-blue-200 transition active:scale-95 cursor-pointer shrink-0"
+          >
+            <ArrowLeft size={13} />
+            <span>Ver todos os setores</span>
+          </button>
+        </div>
+      )}
+
       {/* Cabeçalho do Setor Ativo & Filtros Aplicados */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-2 border-b border-slate-200/80">
         <div>
