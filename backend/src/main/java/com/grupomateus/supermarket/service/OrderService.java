@@ -83,9 +83,24 @@ public class OrderService {
             log.info("Pedido pago via Caderninho para usuário {}. Novo saldo: R$ {}", user.getEmail(), user.getCaderninhoLimit());
         } else if (request.paymentMethod() == PaymentMethod.CARTAO_CREDITO) {
             String cardNumber = request.getEffectiveCardNumber();
-            if (cardNumber != null && cardNumber.replace(" ", "").endsWith("0000")) {
+            if (cardNumber != null && !cardNumber.isBlank()) {
+                String cleanNumber = cardNumber.replaceAll("\\D", "");
+                if (cleanNumber.endsWith("0002")) {
+                    initialStatus = OrderStatus.REJECTED;
+                    failureReason = "Transação recusada pelo banco emissor: Saldo insuficiente.";
+                } else if (cleanNumber.endsWith("0003")) {
+                    initialStatus = OrderStatus.REJECTED;
+                    failureReason = "Transação recusada: Bloqueio preventivo de segurança.";
+                } else if (cleanNumber.endsWith("0000")) {
+                    initialStatus = OrderStatus.REJECTED;
+                    failureReason = "Transação não autorizada pela operadora do cartão.";
+                } else if (!cleanNumber.endsWith("0001") && !isValidLuhn(cleanNumber)) {
+                    initialStatus = OrderStatus.REJECTED;
+                    failureReason = "Número de cartão inválido pelo algoritmo de verificação bancária (Luhn).";
+                }
+            } else {
                 initialStatus = OrderStatus.REJECTED;
-                failureReason = "Transação não autorizada pela operadora do cartão.";
+                failureReason = "Dados do cartão de crédito não informados ou incompletos.";
             }
         }
 
@@ -235,6 +250,29 @@ public class OrderService {
         } catch (Exception e) {
             log.error("Erro não bloqueante ao publicar evento no Kafka para pedido {}", order.getOrderNumber(), e);
         }
+    }
+
+    private boolean isValidLuhn(String cardNumber) {
+        if (cardNumber == null || cardNumber.length() < 13 || cardNumber.length() > 19) {
+            return false;
+        }
+        int sum = 0;
+        boolean alternate = false;
+        for (int i = cardNumber.length() - 1; i >= 0; i--) {
+            int n = cardNumber.charAt(i) - '0';
+            if (n < 0 || n > 9) {
+                return false;
+            }
+            if (alternate) {
+                n *= 2;
+                if (n > 9) {
+                    n -= 9;
+                }
+            }
+            sum += n;
+            alternate = !alternate;
+        }
+        return (sum % 10 == 0);
     }
 }
 

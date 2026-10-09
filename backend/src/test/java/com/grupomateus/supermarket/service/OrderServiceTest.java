@@ -200,5 +200,47 @@ class OrderServiceTest {
         verify(cartItemRepository, never()).deleteByUserId(1L);
         verify(orderEventProducer, never()).publishOrderPlaced(any());
     }
+
+    @Test
+    @DisplayName("Deve registrar pedido REJECTED quando cartão terminar em 0002 (Saldo insuficiente)")
+    void testCheckoutWithCardInsufficientFunds() {
+        CreateOrderRequest request0002 = new CreateOrderRequest(
+                "Dona Marta", "Rua do Sol", "123", "Centro", "São Luís", "MA", "65000-000",
+                PaymentMethod.CARTAO_CREDITO,
+                "5500 0000 0000 0002", "Marta Silva", "08/27", "456", 1
+        );
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(cartItemRepository.findByUserId(1L)).thenReturn(List.of(cartItem));
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OrderResponseDto response = orderService.checkout(1L, request0002);
+
+        assertNotNull(response);
+        assertEquals(OrderStatus.REJECTED, response.status());
+        assertTrue(response.failureReason().contains("Saldo insuficiente"));
+        verify(productRepository, never()).save(product);
+    }
+
+    @Test
+    @DisplayName("Deve registrar pedido REJECTED quando cartão terminar em 0003 (Bloqueio de segurança)")
+    void testCheckoutWithCardSecurityBlock() {
+        CreateOrderRequest request0003 = new CreateOrderRequest(
+                "Dona Marta", "Rua do Sol", "123", "Centro", "São Luís", "MA", "65000-000",
+                PaymentMethod.CARTAO_CREDITO,
+                "6363 6800 0000 0003", "Marta Silva", "05/29", "789", 1
+        );
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(cartItemRepository.findByUserId(1L)).thenReturn(List.of(cartItem));
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OrderResponseDto response = orderService.checkout(1L, request0003);
+
+        assertNotNull(response);
+        assertEquals(OrderStatus.REJECTED, response.status());
+        assertTrue(response.failureReason().contains("Bloqueio preventivo"));
+        verify(productRepository, never()).save(product);
+    }
 }
 
