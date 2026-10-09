@@ -86,8 +86,9 @@ docker compose up --build
 
 A orquestração inicializará automaticamente:
 1. **Banco de Dados PostgreSQL 16:** porta `5432` (com healthcheck ativo).
-2. **Backend Spring Boot 3:** porta `8080` (executa migrações Flyway na subida).
-3. **Frontend Nginx + React:** portas `80` e `3000` (com proxy reverso para `/api/`).
+2. **Mensageria Distribuída Apache Kafka 3.7 (Modo KRaft):** portas `9092` e `29092` (com healthcheck ativo).
+3. **Backend Spring Boot 3:** porta `8080` (aguarda Postgres e Kafka saudáveis; executa migrações Flyway na subida).
+4. **Frontend Nginx + React:** portas `80` e `3000` (com proxy reverso para `/api/`).
 
 **Acessos no navegador:**
 * **Aplicação Web (E-commerce):** `http://localhost:3000` ou `http://localhost`
@@ -102,7 +103,7 @@ A orquestração inicializará automaticamente:
 ```bash
 cd backend
 mvn clean compile
-mvn test                 # Executa os 15 testes unitários automatizados
+mvn test                 # Executa os 19 testes unitários automatizados
 mvn spring-boot:run      # Inicia o servidor em http://localhost:8080
 ```
 * **Console H2:** `http://localhost:8080/h2-console`  
@@ -125,12 +126,13 @@ Para executar a suíte de testes unitários do backend:
 cd backend
 mvn test
 ```
-* **Cobertura:** 15 testes automatizados (JUnit 5 + Mockito), validando:
-  * Registro e login com criptografia BCrypt e geração de JWT;
+* **Cobertura:** 19 testes automatizados (JUnit 5 + Mockito), validando:
+  * Publicação e entrega de eventos assíncronos no Apache Kafka (`supermarket.orders.placed`);
+  * Registro e login com criptografia BCrypt e geração de tokens JWT;
   * Validação atômica de concorrência e estoque na adição ao carrinho;
   * Bloqueio por saldo insuficiente no Caderninho Digital (`CaderninhoLimitExceededException`);
-  * Simulação de autorização de cartão de crédito e persistência de pedidos rejeitados sem perda de estoque;
-  * Buscas e paginação do catálogo de produtos.
+  * Validação e autorização bancária de cartões de crédito (com algoritmo de Luhn e cartões de teste de simulação);
+  * Buscas, filtros por setor e paginação do catálogo de produtos.
 
 ---
 
