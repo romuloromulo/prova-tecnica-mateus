@@ -105,6 +105,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- 11. Apache Kafka (Mensageria e EDA - Diferencial Seções 4.1 e 6.1) -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
         <!-- 11. Testes Automatizados (JUnit 5, Mockito e Spring Test - Requisito Seção 4.3) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

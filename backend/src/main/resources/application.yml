@@ -32,11 +32,30 @@ spring:
       settings:
         web-allow-others: false
 
-# Configuração de Segurança JWT (Stateless)
+  # Configuração Apache Kafka (Mensageria e EDA)
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: true
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
+
+# Configuração de Segurança JWT e Tópicos Kafka
 app:
   jwt:
     secret: ${APP_JWT_SECRET:supermarket_secret_key_for_jwt_signing_token_2026_super_safe_grupomateus}
     expiration-ms: ${APP_JWT_EXPIRATION_MS:86400000} # 24 horas
+  kafka:
+    topics:
+      order-placed: supermarket.orders.placed
+
 
 # Configuração da Documentação OpenAPI / Swagger
 springdoc:

@@ -10,6 +10,7 @@ import com.grupomateus.supermarket.repository.CartItemRepository;
 import com.grupomateus.supermarket.repository.OrderRepository;
 import com.grupomateus.supermarket.repository.ProductRepository;
 import com.grupomateus.supermarket.repository.UserRepository;
+import com.grupomateus.supermarket.kafka.OrderEventProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,8 +43,12 @@ class OrderServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private OrderEventProducer orderEventProducer;
+
     @InjectMocks
     private OrderService orderService;
+
 
     private User user;
     private Product product;
@@ -110,7 +115,9 @@ class OrderServiceTest {
         verify(userRepository, times(1)).save(user);
 
         verify(cartItemRepository, times(1)).deleteByUserId(1L);
+        verify(orderEventProducer, times(1)).publishOrderPlaced(any());
     }
+
 
     @Test
     @DisplayName("Deve lançar CaderninhoLimitExceededException quando o limite for menor que o total")
@@ -191,5 +198,7 @@ class OrderServiceTest {
         verify(productRepository, never()).save(product);
 
         verify(cartItemRepository, never()).deleteByUserId(1L);
+        verify(orderEventProducer, never()).publishOrderPlaced(any());
     }
 }
+

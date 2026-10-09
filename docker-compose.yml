@@ -23,7 +23,33 @@ services:
       retries: 5
 
   # ============================================================================
-  # 2. Backend API: Spring Boot 3 + Java 21
+  # 2. Mensageria Distribuída: Apache Kafka 3.7 (Modo KRaft - Sem ZooKeeper)
+  # ============================================================================
+  kafka:
+    image: apache/kafka:3.7.0
+    container_name: supermarket-kafka
+    restart: unless-stopped
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================================
+  # 3. Backend API: Spring Boot 3 + Java 21
   # ============================================================================
   backend:
     build:
@@ -34,17 +60,21 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/supermarket
       SPRING_DATASOURCE_USERNAME: supermarket
       SPRING_DATASOURCE_PASSWORD: supermarket_pass_2026
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       APP_JWT_SECRET: supermarket_secret_key_for_jwt_signing_token_2026_super_safe_grupomateus
     ports:
       - "8080:8080"
 
+
   # ============================================================================
-  # 3. Frontend Web: React + TypeScript + Nginx Reverse Proxy
+  # 4. Frontend Web: React + TypeScript + Nginx Reverse Proxy
   # ============================================================================
   frontend:
     build:

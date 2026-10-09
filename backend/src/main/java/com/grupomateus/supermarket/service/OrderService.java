@@ -23,6 +23,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import com.grupomateus.supermarket.event.OrderItemEvent;
+import com.grupomateus.supermarket.event.OrderPlacedEvent;
+import com.grupomateus.supermarket.kafka.OrderEventProducer;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,7 +36,9 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final OrderEventProducer orderEventProducer;
     private static final SecureRandom RANDOM = new SecureRandom();
+
 
     private static final BigDecimal FREE_SHIPPING_THRESHOLD = new BigDecimal("150.00");
     private static final BigDecimal STANDARD_DELIVERY_FEE = new BigDecimal("15.00");
@@ -125,8 +131,13 @@ public class OrderService {
         cartItemRepository.deleteByUserId(userId);
 
         log.info("Pedido {} finalizado com sucesso com valor total de R$ {}", savedOrder.getOrderNumber(), totalAmount);
+
+        // Publicação do evento no Apache Kafka (Processamento Assíncrono Desacoplado)
+        publishKafkaEvent(savedOrder);
+
         return OrderResponseDto.fromEntity(savedOrder);
     }
+
 
     @Transactional
     public OrderResponseDto simulatePayment(PaymentSimulationRequest simRequest) {
@@ -186,4 +197,44 @@ public class OrderService {
                 .cep(req.getEffectiveCep())
                 .build();
     }
+
+    private void publishKafkaEvent(Order order) {
+        try {
+            List<OrderItemEvent> itemEvents = order.getItems().stream()
+                    .map(item -> new OrderItemEvent(
+                            item.getProduct() != null ? item.getProduct().getId() : null,
+                            item.getProductName(),
+                            item.getQuantity(),
+                            item.getUnitPrice(),
+                            item.getTotalPrice()
+                    ))
+                    .toList();
+
+            String deliveryAddress = String.format("%s, %s - %s, %s/%s, CEP %s",
+                    order.getStreet(),
+                    order.getNumber(),
+                    order.getNeighborhood(),
+                    order.getCity(),
+                    order.getState(),
+                    order.getCep());
+
+            OrderPlacedEvent event = new OrderPlacedEvent(
+                    order.getId(),
+                    order.getOrderNumber(),
+                    order.getUser().getId(),
+                    order.getUser().getName(),
+                    order.getUser().getEmail(),
+                    order.getTotalAmount(),
+                    order.getPaymentMethod(),
+                    deliveryAddress,
+                    itemEvents,
+                    order.getCreatedAt() != null ? order.getCreatedAt() : java.time.LocalDateTime.now()
+            );
+
+            orderEventProducer.publishOrderPlaced(event);
+        } catch (Exception e) {
+            log.error("Erro não bloqueante ao publicar evento no Kafka para pedido {}", order.getOrderNumber(), e);
+        }
+    }
 }
+
