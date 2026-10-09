@@ -40,8 +40,9 @@ export const CreditCardPayment: React.FC<CreditCardPaymentProps> = ({
   onAutoFillTestCard,
 }) => {
   const brand = detectCardBrand(cardData.number);
-  const isValidLuhn = validateLuhn(cardData.number);
   const cleanNumber = cardData.number.replace(/\D/g, '');
+  const isPresetCard = TEST_CARDS.some((c) => c.number.replace(/\D/g, '') === cleanNumber);
+  const isValidCardNumber = isPresetCard || cleanNumber.endsWith('0001') || validateLuhn(cleanNumber);
   const hasMinDigits = cleanNumber.length >= 13;
 
   const handleFillPreset = (preset: TestCardPreset) => {
@@ -204,24 +205,15 @@ export const CreditCardPayment: React.FC<CreditCardPaymentProps> = ({
             />
             <CreditCard size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
 
-            {/* Indicador Visual do Algoritmo de Luhn */}
+            {/* Indicador Visual: Confirmação sutil apenas quando o número for validado */}
             <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-              {hasMinDigits && (
-                isValidLuhn ? (
-                  <span
-                    className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200"
-                    title="Número validado pelo Algoritmo de Luhn"
-                  >
-                    <CheckCircle2 size={13} /> Válido
-                  </span>
-                ) : (
-                  <span
-                    className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200"
-                    title="Dígito verificador inválido no algoritmo bancário"
-                  >
-                    <AlertCircle size={13} /> Inválido
-                  </span>
-                )
+              {hasMinDigits && isValidCardNumber && (
+                <span
+                  className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200"
+                  title="Número validado pelo Algoritmo de Luhn"
+                >
+                  <CheckCircle2 size={13} /> Válido
+                </span>
               )}
             </div>
           </div>

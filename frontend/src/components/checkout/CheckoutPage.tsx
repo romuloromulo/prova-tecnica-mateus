@@ -155,6 +155,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
   // Avança do Endereço para o Pagamento com validação Zod
   const handleProceedToPayment = () => {
     setErrorMessage(null);
+    setCardRejectionReason(null);
     setAddressErrors({});
 
     const result = shippingAddressSchema.safeParse(shippingAddress);
@@ -241,10 +242,16 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
         const reason =
           order.failureReason ||
           'Transação recusada pelo banco emissor. Verifique o limite ou utilize outro cartão.';
-        setCardRejectionReason(reason);
-        setErrorMessage(reason);
+        if (paymentMethod === 'CARTAO_CREDITO') {
+          setCardRejectionReason(reason);
+          setErrorMessage(null);
+        } else {
+          setCardRejectionReason(null);
+          setErrorMessage(reason);
+        }
       }
     } catch {
+      setCardRejectionReason(null);
       setErrorMessage('Erro de comunicação com o gateway bancário. Tente novamente.');
     } finally {
       setIsProcessing(false);
@@ -948,8 +955,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
                           </div>
                         )}
 
-                        {/* ALERTA IMEDIATO LOGO ABAIXO DO FORMULÁRIO (No Campo Visual do Usuário) */}
-                        {(errorMessage || cardRejectionReason) && currentStep === 'payment' && (
+                        {/* ALERTA GERAL DE ERRO (Exibido apenas para outros métodos de pagamento ou falha de rede) */}
+                        {errorMessage && !cardRejectionReason && currentStep === 'payment' && (
                           <div
                             role="alert"
                             className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-500 text-rose-950 shadow-md animate-in fade-in slide-in-from-top-1 space-y-2.5"
@@ -961,16 +968,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between gap-2 flex-wrap">
                                   <strong className="font-black text-sm text-rose-900">
-                                    {cardRejectionReason
-                                      ? 'Transação Não Autorizada pelo Banco'
-                                      : 'Aviso sobre o Pagamento'}
+                                    Aviso sobre o Pagamento
                                   </strong>
                                   <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-rose-200 text-rose-900 border border-rose-300">
-                                    {paymentMethod === 'CARTAO_CREDITO' ? 'Cartão Recusado' : 'Atenção'}
+                                    Atenção
                                   </span>
                                 </div>
                                 <p className="mt-1 text-xs text-rose-800 font-semibold leading-relaxed">
-                                  {cardRejectionReason || errorMessage}
+                                  {errorMessage}
                                 </p>
                               </div>
                             </div>
@@ -979,16 +984,6 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
                               <span className="text-rose-700 font-medium">
                                 🔒 Seus produtos continuam 100% salvos na cesta. Nenhuma informação foi perdida.
                               </span>
-                              {paymentMethod === 'CARTAO_CREDITO' && (
-                                <button
-                                  type="button"
-                                  onClick={handleAutoFillValidTestCard}
-                                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black shadow-xs transition active:scale-95 cursor-pointer"
-                                >
-                                  <Zap size={12} className="fill-slate-950" />
-                                  <span>Testar com Cartão Válido (1 Clique)</span>
-                                </button>
-                              )}
                             </div>
                           </div>
                         )}
