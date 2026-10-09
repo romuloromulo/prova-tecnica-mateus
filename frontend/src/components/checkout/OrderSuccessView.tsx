@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Order } from '@/types/order';
+import { formatCurrency } from '@/utils/formatters';
 import {
   CheckCircle2,
   Clock,
@@ -25,6 +26,18 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
   const handlePrint = () => {
     window.print();
   };
+
+  const {
+    orderNumber,
+    id,
+    shippingAddress,
+    items,
+    paymentMethod,
+    cardDetails,
+    subtotal,
+    deliveryFee,
+    totalAmount,
+  } = order;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
@@ -57,7 +70,7 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
           </p>
 
           <div className="mt-4 px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-xs font-mono font-bold tracking-wider">
-            Protocolo: <span className="text-amber-300">#{order.orderNumber}</span>
+            Protocolo: <span className="text-amber-300">#{orderNumber || id}</span>
           </div>
         </div>
       </section>
@@ -128,13 +141,21 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
             <span>Destino da Entrega</span>
           </div>
 
-          <div className="text-xs text-slate-700 space-y-1">
-            <p className="font-extrabold text-sm text-slate-900">{order.shippingAddress.recipientName}</p>
-            <p>{order.shippingAddress.street}, nº {order.shippingAddress.number}</p>
-            {order.shippingAddress.complement && <p className="text-slate-500">Complemento: {order.shippingAddress.complement}</p>}
-            <p>{order.shippingAddress.neighborhood} • {order.shippingAddress.city} - {order.shippingAddress.state}</p>
-            <p className="font-mono text-slate-500">CEP: {order.shippingAddress.cep}</p>
-          </div>
+          {shippingAddress ? (
+            <div className="text-xs text-slate-700 space-y-1">
+              <p className="font-extrabold text-sm text-slate-900">{shippingAddress.recipientName}</p>
+              <p>{shippingAddress.street}{shippingAddress.number ? `, nº ${shippingAddress.number}` : ''}</p>
+              {shippingAddress.complement && (
+                <p className="text-slate-500">Complemento: {shippingAddress.complement}</p>
+              )}
+              <p>{shippingAddress.neighborhood ? `${shippingAddress.neighborhood} • ` : ''}{shippingAddress.city} - {shippingAddress.state}</p>
+              {shippingAddress.cep && <p className="font-mono text-slate-500">CEP: {shippingAddress.cep}</p>}
+            </div>
+          ) : (
+            <div className="text-xs text-slate-500 italic py-2">
+              Endereço de entrega não registrado para este pedido.
+            </div>
+          )}
 
           <div className="pt-2 border-t border-slate-100 flex items-center gap-2 text-xs text-slate-600 font-semibold">
             <Clock size={15} className="text-mateus-sky-600" />
@@ -152,35 +173,36 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5 text-xs">
             <div className="flex items-center justify-between font-bold text-slate-800">
               <span className="flex items-center gap-1.5">
-                {order.paymentMethod === 'CADERNINHO' && <BookOpen size={16} className="text-mateus-blue" />}
-                {order.paymentMethod === 'PIX' && <Zap size={16} className="text-emerald-600" />}
-                {order.paymentMethod === 'CARTAO_CREDITO' && <CreditCard size={16} className="text-mateus-red" />}
+                {paymentMethod === 'CADERNINHO' && <BookOpen size={16} className="text-mateus-blue" />}
+                {paymentMethod === 'PIX' && <Zap size={16} className="text-emerald-600" />}
+                {paymentMethod === 'CARTAO_CREDITO' && <CreditCard size={16} className="text-mateus-red" />}
                 <span>
-                  {order.paymentMethod === 'CADERNINHO' && 'Caderninho Digital do Seu Osvaldo'}
-                  {order.paymentMethod === 'PIX' && 'PIX Instantâneo'}
-                  {order.paymentMethod === 'CARTAO_CREDITO' && `Cartão final ${order.cardDetails?.lastFourDigits || '0001'} (${order.cardDetails?.installments || 1}x)`}
+                  {paymentMethod === 'CADERNINHO' && 'Caderninho Digital do Seu Osvaldo'}
+                  {paymentMethod === 'PIX' && 'PIX Instantâneo'}
+                  {paymentMethod === 'CARTAO_CREDITO' && `Cartão final ${cardDetails?.lastFourDigits || '0001'} (${cardDetails?.installments || 1}x)`}
                 </span>
               </span>
               <span className="text-emerald-700 font-extrabold">Aprovado</span>
             </div>
 
             <div className="flex justify-between text-slate-500 text-[11px] pt-1 border-t border-slate-200">
-              <span>Subtotal ({order.items.length} itens):</span>
-              <span>R$ {order.subtotal.toFixed(2).replace('.', ',')}</span>
+              <span>Subtotal ({items?.length ?? 0} {items?.length === 1 ? 'item' : 'itens'}):</span>
+              <span>{formatCurrency(subtotal)}</span>
             </div>
 
             <div className="flex justify-between text-slate-500 text-[11px]">
               <span>Taxa de Entrega:</span>
-              <span>{order.deliveryFee === 0 ? 'GRÁTIS' : `R$ ${order.deliveryFee.toFixed(2).replace('.', ',')}`}</span>
+              <span>{deliveryFee === 0 ? 'GRÁTIS' : formatCurrency(deliveryFee)}</span>
             </div>
 
             <div className="flex justify-between text-slate-900 font-black text-sm pt-1 border-t border-slate-200">
               <span>Total Pago:</span>
-              <span className="text-mateus-blue">R$ {order.totalAmount.toFixed(2).replace('.', ',')}</span>
+              <span className="text-mateus-blue">{formatCurrency(totalAmount)}</span>
             </div>
           </div>
         </section>
       </div>
+
 
       {/* Botões de Ação Final */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4">

@@ -44,4 +44,7 @@ pnpm-debug.log*
 
 # Internal interview & defense notes
 docs/guia-defesa-backend.md
+docs/*.pdf
+docs/generate_pdf.py
+
 

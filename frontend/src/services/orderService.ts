@@ -1,9 +1,11 @@
 import { api } from './api';
+import { cartService } from './cartService';
 import type {
   Order,
   CreateOrderPayload,
   OrderStatus,
   PaymentSimulationRequest,
+  ShippingAddress,
 } from '@/types/order';
 import { generatePixBrCode, detectCardBrand, validateLuhn } from '@/utils/paymentUtils';
 
@@ -28,19 +30,119 @@ const saveOrderLocal = (order: Order): void => {
   }
 };
 
+interface BackendOrderDto {
+  id?: number | string;
+  orderNumber?: string;
+  subtotal?: number;
+  deliveryFee?: number;
+  totalAmount?: number;
+  paymentMethod?: any;
+  status?: any;
+  failureReason?: string;
+  recipientName?: string;
+  street?: string;
+  number?: string;
+  complement?: string;
+  neighborhood?: string;
+  city?: string;
+  state?: string;
+  cep?: string;
+  shippingAddress?: ShippingAddress;
+  createdAt?: string;
+  items?: any[];
+  cardDetails?: any;
+  caderninhoDetails?: any;
+  pixDetails?: any;
+}
+
+function mapBackendOrderToFrontend(data: BackendOrderDto, payload: CreateOrderPayload): Order {
+  const shippingAddress: ShippingAddress = {
+    recipientName: data.recipientName || data.shippingAddress?.recipientName || payload.shippingAddress.recipientName || 'Cliente Mateus',
+    street: data.street || data.shippingAddress?.street || payload.shippingAddress.street || '',
+    number: data.number || data.shippingAddress?.number || payload.shippingAddress.number || 'S/N',
+    complement: data.complement || data.shippingAddress?.complement || payload.shippingAddress.complement || '',
+    neighborhood: data.neighborhood || data.shippingAddress?.neighborhood || payload.shippingAddress.neighborhood || '',
+    city: data.city || data.shippingAddress?.city || payload.shippingAddress.city || 'São Luís',
+    state: data.state || data.shippingAddress?.state || payload.shippingAddress.state || 'MA',
+    cep: data.cep || data.shippingAddress?.cep || payload.shippingAddress.cep || '',
+  };
+
+  const subtotal = Number(data.subtotal ?? payload.items.reduce((acc, it) => acc + (it.product?.price || 0) * (it.quantity || 1), 0));
+  const deliveryFee = Number(data.deliveryFee ?? (subtotal >= 120 ? 0 : 9.9));
+  const totalAmount = Number(data.totalAmount ?? (subtotal + deliveryFee));
+
+  let cardDetails = data.cardDetails;
+  if (!cardDetails && payload.paymentMethod === 'CARTAO_CREDITO' && payload.cardData) {
+    const cleanNumber = payload.cardData.number.replace(/\D/g, '');
+    cardDetails = {
+      lastFourDigits: cleanNumber.slice(-4) || '0001',
+      brand: detectCardBrand(cleanNumber),
+      installments: payload.cardData.installments || 1,
+    };
+  }
+
+  let caderninhoDetails = data.caderninhoDetails;
+  if (!caderninhoDetails && payload.paymentMethod === 'CADERNINHO') {
+    caderninhoDetails = {
+      customerName: shippingAddress.recipientName,
+      debitedAmount: totalAmount,
+      remainingLimit: 0,
+    };
+  }
+
+  let pixDetails = data.pixDetails;
+  if (!pixDetails && (data.paymentMethod === 'PIX' || payload.paymentMethod === 'PIX')) {
+    const orderNum = data.orderNumber || String(data.id || Date.now());
+    pixDetails = {
+      qrCodeSvgData: '/mascote/dentinho-carrinho.svg',
+      copyPasteKey: generatePixBrCode(orderNum, totalAmount),
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+    };
+  }
+
+  return {
+    id: String(data.id || data.orderNumber || Date.now()),
+    orderNumber: data.orderNumber || String(data.id),
+    createdAt: data.createdAt || new Date().toISOString(),
+    items: payload.items,
+    subtotal,
+    deliveryFee,
+    totalAmount,
+    paymentMethod: data.paymentMethod || payload.paymentMethod,
+    status: (data.status as OrderStatus) || 'APPROVED',
+    shippingAddress,
+    pixDetails,
+    cardDetails,
+    caderninhoDetails,
+    failureReason: data.failureReason || undefined,
+  };
+}
+
 export const orderService = {
   async createOrder(payload: CreateOrderPayload): Promise<Order> {
     try {
+      // 1. Sincroniza o carrinho da sessão com o backend antes do checkout
+      if (payload.items && payload.items.length > 0) {
+        try {
+          await cartService.syncCart(payload.items);
+        } catch {
+          // Segue com a requisição de checkout
+        }
+      }
+
+      // 2. Chama a API de checkout do Spring Boot
       const response = await api.post('/orders', payload);
-      if (response.data && response.data.id) {
-        saveOrderLocal(response.data);
-        return response.data;
+      if (response.data && (response.data.id || response.data.orderNumber)) {
+        const mapped = mapBackendOrderToFrontend(response.data, payload);
+        saveOrderLocal(mapped);
+        return mapped;
       }
       return this.simulateCreateOrder(payload);
     } catch {
       return this.simulateCreateOrder(payload);
     }
   },
+
 
   simulateCreateOrder(payload: CreateOrderPayload): Order {
     const orderId = `ORD-${Date.now().toString().slice(-6)}`;

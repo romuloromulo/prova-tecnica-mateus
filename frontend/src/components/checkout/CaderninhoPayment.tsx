@@ -22,7 +22,7 @@ export const CaderninhoPayment: React.FC<CaderninhoPaymentProps> = ({ totalAmoun
 
         <div>
           <h4 className="text-sm sm:text-base font-black text-mateus-blue-900 leading-tight">
-            Caderninho Digital do Seu Osvaldo (1987)
+            Caderninho Digital do Seu Osvaldo 
           </h4>
           <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
             Crédito de confiança baseado no relacionamento do balcão da esquina. Pague no dia 10 do mês seguinte sem taxa de juros!

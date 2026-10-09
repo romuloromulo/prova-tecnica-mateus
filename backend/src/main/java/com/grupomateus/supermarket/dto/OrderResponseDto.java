@@ -24,6 +24,7 @@ public record OrderResponseDto(
         String city,
         String state,
         String cep,
+        ShippingAddressDto shippingAddress,
         LocalDateTime createdAt,
         List<OrderItemResponseDto> items
 ) {
@@ -31,6 +32,17 @@ public record OrderResponseDto(
         List<OrderItemResponseDto> itemDtos = order.getItems().stream()
                 .map(OrderItemResponseDto::fromEntity)
                 .toList();
+
+        ShippingAddressDto addressDto = new ShippingAddressDto(
+                order.getRecipientName(),
+                order.getStreet(),
+                order.getNumber(),
+                null,
+                order.getNeighborhood(),
+                order.getCity(),
+                order.getState(),
+                order.getCep()
+        );
 
         return new OrderResponseDto(
                 order.getId(),
@@ -48,6 +60,7 @@ public record OrderResponseDto(
                 order.getCity(),
                 order.getState(),
                 order.getCep(),
+                addressDto,
                 order.getCreatedAt(),
                 itemDtos
         );
