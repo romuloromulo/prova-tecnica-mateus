@@ -22,6 +22,10 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
+  const userGreeting = userName
+    ? (userName.startsWith('Dona ') ? userName.split(' ').slice(0, 2).join(' ') : userName.split(' ')[0])
+    : 'vizinho';
+
   return (
     <header className="bg-mateus-blue text-white shadow-xs">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3.5">
@@ -50,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="relative">
               <input
                 type="search"
-                placeholder="O que você precisa hoje, vizinho? Ex: Arroz, Café, Frutas..."
+                placeholder={`O que você precisa hoje, ${userGreeting}? Ex: Arroz, Café, Frutas...`}
                 onChange={(e) => onSearchChange?.(e.target.value)}
                 aria-label="Buscar produtos no supermercado"
                 className="w-full bg-white text-slate-900 placeholder:text-slate-400 pl-11 pr-4 py-2 rounded-full text-xs sm:text-sm font-medium border-2 border-transparent focus:border-mateus-sky-500 focus:outline-none shadow-sm transition"
@@ -157,7 +161,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="relative">
             <input
               type="search"
-              placeholder="Buscar produtos (ex: Café, Arroz)..."
+              placeholder={`O que você precisa hoje, ${userGreeting}?`}
               onChange={(e) => onSearchChange?.(e.target.value)}
               aria-label="Buscar produtos no supermercado"
               className="w-full bg-white text-slate-900 placeholder:text-slate-400 pl-9 pr-4 py-2 rounded-full text-xs font-medium border focus:border-mateus-sky-500 focus:outline-none shadow-xs"

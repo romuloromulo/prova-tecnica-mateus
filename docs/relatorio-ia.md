@@ -73,7 +73,7 @@ A construção do ecossistema front-end para o **Supermercado "Você no Coraçã
 
 ### 7.1 Ganhos Reais de Produtividade
 * **Velocidade de Scaffolding e Infraestrutura:** A configuração inicial do ecossistema com Vite 6, React 19, TypeScript e Tailwind CSS v3.4 foi concluída de forma limpa, sem conflitos de dependências.
-* **Componentes Ricos & Storytelling de Marca:** A criação dos artefatos visuais do mascote Dentinho em formato SVG puro (`dentinho-normal.svg`, `dentinho-carrinho.svg`, `dentinho-sucesso.svg`) e a paleta temática inspirada no Seu Osvaldo (1987) e Dona Marta trouxeram uma identidade visual única e acolhedora.
+* **Componentes Ricos & Storytelling de Marca:** A criação dos artefatos visuais do mascote Dentinho em formato SVG puro (`dentinho-normal.svg`, `dentinho-carrinho.svg`, `dentinho-sucesso.svg`) e a paleta temática inspirada no Seu Osvaldo  e Dona Marta trouxeram uma identidade visual única e acolhedora.
 * **Algoritmos Matemáticos & Validações Bancárias:** A implementação do **Algoritmo de Luhn (ISO/IEC 7812)**, do gerador de payload EMVCo para PIX e dos esquemas rigorosos do **Zod** ocorreu com precisão matemática imediata.
 
 ### 7.2 O Papel Indispensável da Curadoria e Intervenção Humana
