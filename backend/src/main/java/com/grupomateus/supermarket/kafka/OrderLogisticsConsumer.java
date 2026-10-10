@@ -4,11 +4,6 @@ import com.grupomateus.supermarket.event.OrderPlacedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-
-/**
- * Consumidor Kafka responsável pela integração com o sistema de WMS e Logística de Loja.
- * Pertence ao Consumer Group 'supermarket-logistics-group'.
- */
 @Component
 @Slf4j
 public class OrderLogisticsConsumer {

@@ -156,7 +156,6 @@ public class OrderService {
 
         log.info("Pedido {} finalizado com sucesso com valor total de R$ {}", savedOrder.getOrderNumber(), totalAmount);
 
-        // Publicação do evento no Apache Kafka (Processamento Assíncrono Desacoplado)
         publishKafkaEvent(savedOrder);
 
         return OrderResponseDto.fromEntity(savedOrder);
