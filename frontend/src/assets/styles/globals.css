@@ -38,24 +38,14 @@
    ========================================================================== */
 
 /* Nível 1: A+ (+15% a +20% no tamanho de todas as letras) */
-html.font-size-lg,
-body.font-size-lg {
+html.font-size-lg {
   font-size: 115%;
 }
-html.font-size-lg :where(.text-\[10px\]),
-body.font-size-lg :where(.text-\[10px\]) { font-size: 12px; }
-html.font-size-lg :where(.text-\[11px\]),
-body.font-size-lg :where(.text-\[11px\]) { font-size: 13px; }
 
 /* Nível 2: A++ (+30% a +35% no tamanho das letras - Máximo para Dona Marta) */
-html.font-size-xl,
-body.font-size-xl {
+html.font-size-xl {
   font-size: 130%;
 }
-html.font-size-xl :where(.text-\[10px\]),
-body.font-size-xl :where(.text-\[10px\]) { font-size: 14px; }
-html.font-size-xl :where(.text-\[11px\]),
-body.font-size-xl :where(.text-\[11px\]) { font-size: 15px; }
 
 /* ==========================================================================
    ALTO CONTRASTE INTEGRAL (WCAG 2.1 AAA - 7:1+ a 21:1 Contrast Ratio)

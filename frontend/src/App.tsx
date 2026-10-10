@@ -12,6 +12,7 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
 import type { ProductCategory } from '@/types/product';
+import { useA11y } from '@/hooks/useA11y';
 import {
   Sparkles,
   Heart,
@@ -21,8 +22,16 @@ import {
 } from 'lucide-react';
 
 export const AppContent: React.FC = () => {
+  const { fontSize } = useA11y();
   const { user, isAuthenticated, simulateLoginAsDonaMarta, simulateLoginAsPedro, logout } = useAuthStore();
   const { isOpen, openCart, getTotalItems, getSubtotal } = useCartStore();
+
+  // Escala dinâmica de tipografia do Hero (garantia absoluta de aumento para Dona Marta)
+  const heroBadgeSize = fontSize === 'xl' ? 'text-sm sm:text-base' : fontSize === 'lg' ? 'text-xs sm:text-sm' : 'text-xs sm:text-sm';
+  const heroTitleSize = fontSize === 'xl' ? 'text-4xl sm:text-6xl lg:text-7xl' : fontSize === 'lg' ? 'text-3xl sm:text-5xl lg:text-6xl' : 'text-2xl sm:text-4xl lg:text-5xl';
+  const heroBodySize = fontSize === 'xl' ? 'text-base sm:text-lg md:text-xl' : fontSize === 'lg' ? 'text-sm sm:text-base md:text-lg' : 'text-xs sm:text-sm md:text-base';
+  const heroInfoSize = fontSize === 'xl' ? 'text-sm sm:text-base' : fontSize === 'lg' ? 'text-xs sm:text-sm' : 'text-xs sm:text-sm';
+  const heroBtnSize = fontSize === 'xl' ? 'text-sm sm:text-base' : fontSize === 'lg' ? 'text-xs sm:text-sm' : 'text-xs sm:text-sm';
 
   const [currentView, setCurrentView] = useState<'store' | 'checkout'>('store');
   const [activeCategory, setActiveCategory] = useState<ProductCategory | 'all'>('all');
@@ -132,12 +141,12 @@ export const AppContent: React.FC = () => {
 
               <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
                 <div className="lg:col-span-8 space-y-3 sm:space-y-4">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-[11px] sm:text-xs font-bold text-mateus-sky-100">
-                    <BookOpen size={13} className="text-mateus-sky-400" />
+                  <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 font-bold text-mateus-sky-100 ${heroBadgeSize}`}>
+                    <BookOpen size={14} className="text-mateus-sky-400 shrink-0" />
                     <span>Tradição do Balcão de 1987 • Desafio Técnico 2026</span>
                   </div>
 
-                  <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+                  <h1 className={`font-black tracking-tight leading-tight transition-all duration-200 ${heroTitleSize}`}>
                     Do caderninho azul para a{' '}
                     <span className="text-mateus-sky-300 underline decoration-mateus-red decoration-4">
                       palma da sua mão
@@ -145,7 +154,7 @@ export const AppContent: React.FC = () => {
                     .
                   </h1>
 
-                  <p className="text-slate-200 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed">
+                  <p className={`text-slate-200 max-w-2xl leading-relaxed transition-all duration-200 ${heroBodySize}`}>
                     Em 1987, o Seu Osvaldo conhecia cada cliente pelo nome e anotava no caderninho azul de confiança.
                     Hoje, transformamos esse mesmo carinho em uma experiência digital inclusiva e com alto conforto visual para a <strong>Dona Marta</strong> e agilidade para o <strong>Pedro</strong>.
                   </p>
@@ -170,8 +179,8 @@ export const AppContent: React.FC = () => {
                         </button>
                       </>
                     ) : (
-                      <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-mateus-blue-800/90 text-xs text-mateus-sky-100 border border-mateus-blue-600">
-                        <Heart size={14} className="fill-mateus-red text-mateus-red" />
+                      <div className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-mateus-blue-800/90 text-mateus-sky-100 border border-mateus-blue-600 ${heroInfoSize}`}>
+                        <Heart size={14} className="fill-mateus-red text-mateus-red shrink-0" />
                         <span>
                           Conectado como <strong>{user?.name}</strong> • Limite Disponível: R$ {user?.caderninhoLimit?.toFixed(2)}
                         </span>
@@ -179,31 +188,31 @@ export const AppContent: React.FC = () => {
                     )}
 
                     <div className="w-full sm:w-auto flex items-center gap-2 pt-1 sm:pt-0">
-                      <span className="text-[11px] text-slate-300 font-semibold">Simular Persona:</span>
+                      <span className={`text-slate-300 font-semibold ${heroInfoSize}`}>Simular Persona:</span>
                       <button
                         type="button"
                         onClick={simulateLoginAsDonaMarta}
                         title="Entrar diretamente como Dona Marta"
-                        className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                        className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${heroBtnSize} ${
                           user?.id === 1
                             ? 'bg-amber-400 text-slate-900 ring-2 ring-white'
                             : 'bg-white/10 hover:bg-white/20 text-white'
                         }`}
                       >
-                        <UserCheck size={13} />
+                        <UserCheck size={14} />
                         <span>Dona Marta</span>
                       </button>
                       <button
                         type="button"
                         onClick={simulateLoginAsPedro}
                         title="Entrar diretamente como Pedro"
-                        className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                        className={`px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${heroBtnSize} ${
                           user?.id === 2
                             ? 'bg-amber-400 text-slate-900 ring-2 ring-white'
                             : 'bg-white/10 hover:bg-white/20 text-white'
                         }`}
                       >
-                        <UserCheck size={13} />
+                        <UserCheck size={14} />
                         <span>Pedro</span>
                       </button>
                     </div>
