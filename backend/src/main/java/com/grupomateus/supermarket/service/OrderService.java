@@ -66,8 +66,17 @@ public class OrderService {
                 .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal deliveryFee = subtotal.compareTo(FREE_SHIPPING_THRESHOLD) >= 0 ? BigDecimal.ZERO : STANDARD_DELIVERY_FEE;
-        BigDecimal totalAmount = subtotal.add(deliveryFee);
+        BigDecimal deliveryFee;
+        if ("pickup".equalsIgnoreCase(request.deliveryType())) {
+            deliveryFee = BigDecimal.ZERO;
+        } else if (request.deliveryFee() != null) {
+            deliveryFee = request.deliveryFee();
+        } else {
+            deliveryFee = subtotal.compareTo(FREE_SHIPPING_THRESHOLD) >= 0 ? BigDecimal.ZERO : STANDARD_DELIVERY_FEE;
+        }
+
+        BigDecimal discountAmount = request.discountAmount() != null ? request.discountAmount() : BigDecimal.ZERO;
+        BigDecimal totalAmount = subtotal.add(deliveryFee).subtract(discountAmount).max(BigDecimal.ZERO);
 
         
         OrderStatus initialStatus = OrderStatus.APPROVED;
@@ -157,6 +166,13 @@ public class OrderService {
     @Transactional
     public OrderResponseDto simulatePayment(PaymentSimulationRequest simRequest) {
         Order order = orderRepository.findByOrderNumber(simRequest.orderId())
+                .or(() -> {
+                    try {
+                        return orderRepository.findById(Long.parseLong(simRequest.orderId()));
+                    } catch (NumberFormatException e) {
+                        return java.util.Optional.empty();
+                    }
+                })
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado: " + simRequest.orderId()));
 
         order.setStatus(simRequest.simulateStatus());

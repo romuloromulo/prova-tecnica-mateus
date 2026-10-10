@@ -67,9 +67,20 @@ public class CartService {
 
     @Transactional
     public CartResponseDto syncCart(Long userId, SyncCartRequest request) {
+        cartItemRepository.deleteByUserId(userId);
         if (request != null && request.items() != null) {
+            User user = userRepository.getReferenceById(userId);
             for (AddToCartRequest item : request.items()) {
-                addToCart(userId, item);
+                Product product = productRepository.findById(item.productId())
+                        .orElse(null);
+                if (product != null && item.quantity() > 0) {
+                    CartItem newItem = CartItem.builder()
+                            .user(user)
+                            .product(product)
+                            .quantity(item.quantity())
+                            .build();
+                    cartItemRepository.save(newItem);
+                }
             }
         }
         return getCart(userId);

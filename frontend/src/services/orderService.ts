@@ -67,9 +67,11 @@ function mapBackendOrderToFrontend(data: BackendOrderDto, payload: CreateOrderPa
     cep: data.cep || data.shippingAddress?.cep || payload.shippingAddress.cep || '',
   };
 
-  const subtotal = Number(data.subtotal ?? payload.items.reduce((acc, it) => acc + (it.product?.price || 0) * (it.quantity || 1), 0));
-  const deliveryFee = Number(data.deliveryFee ?? (subtotal >= 120 ? 0 : 9.9));
-  const totalAmount = Number(data.totalAmount ?? (subtotal + deliveryFee));
+  const calculatedSubtotal = payload.items.reduce((acc, it) => acc + (it.product?.price || 0) * (it.quantity || 1), 0);
+  const subtotal = Number(data.subtotal ?? calculatedSubtotal);
+  const deliveryFee = Number(payload.deliveryFee !== undefined ? payload.deliveryFee : (data.deliveryFee ?? (subtotal >= 120 ? 0 : 9.9)));
+  const discountAmount = Number(payload.discountAmount || 0);
+  const totalAmount = Number(payload.totalAmount !== undefined ? payload.totalAmount : (data.totalAmount ?? Math.max(0, subtotal + deliveryFee - discountAmount)));
 
   let cardDetails = data.cardDetails;
   if (!cardDetails && payload.paymentMethod === 'CARTAO_CREDITO' && payload.cardData) {
@@ -107,6 +109,9 @@ function mapBackendOrderToFrontend(data: BackendOrderDto, payload: CreateOrderPa
     items: payload.items,
     subtotal,
     deliveryFee,
+    discountAmount,
+    couponCode: payload.couponCode,
+    deliveryType: payload.deliveryType,
     totalAmount,
     paymentMethod: data.paymentMethod || payload.paymentMethod,
     status: (data.status as OrderStatus) || 'APPROVED',
@@ -150,8 +155,9 @@ export const orderService = {
       (acc, item) => acc + (item.product.price || 0) * (item.quantity || 1),
       0
     );
-    const deliveryFee = subtotal >= 120 ? 0 : 9.9;
-    const totalAmount = subtotal + deliveryFee;
+    const deliveryFee = payload.deliveryFee !== undefined ? payload.deliveryFee : (payload.deliveryType === 'pickup' || subtotal >= 120 ? 0 : 9.9);
+    const discountAmount = payload.discountAmount || 0;
+    const totalAmount = payload.totalAmount !== undefined ? payload.totalAmount : Math.max(0, subtotal + deliveryFee - discountAmount);
 
     let initialStatus: OrderStatus = 'PENDING';
     let failureReason: string | undefined;
@@ -208,6 +214,9 @@ export const orderService = {
       items: payload.items,
       subtotal,
       deliveryFee,
+      discountAmount,
+      couponCode: payload.couponCode,
+      deliveryType: payload.deliveryType,
       totalAmount,
       paymentMethod: payload.paymentMethod,
       status: initialStatus,
@@ -223,11 +232,21 @@ export const orderService = {
   },
 
   async simulatePayment(request: PaymentSimulationRequest): Promise<Order> {
+    const orders = getStoredOrders();
+    const existing = orders.find(
+      (o) => String(o.id) === String(request.orderId) || o.orderNumber === request.orderId
+    );
+
     try {
-      const response = await api.post('/payments/simulate', request);
-      if (response.data && response.data.id) {
-        saveOrderLocal(response.data);
-        return response.data;
+      await api.post('/payments/simulate', request);
+      if (existing) {
+        const updated: Order = {
+          ...existing,
+          status: request.simulateStatus,
+          failureReason: request.simulateStatus === 'REJECTED' ? request.rejectionReason : undefined,
+        };
+        saveOrderLocal(updated);
+        return updated;
       }
       return this.simulateLocalPaymentTransition(request);
     } catch {
@@ -237,7 +256,9 @@ export const orderService = {
 
   simulateLocalPaymentTransition(request: PaymentSimulationRequest): Order {
     const orders = getStoredOrders();
-    const existing = orders.find((o) => o.id === request.orderId);
+    const existing = orders.find(
+      (o) => String(o.id) === String(request.orderId) || o.orderNumber === request.orderId
+    );
 
     const updated: Order = existing
       ? {

@@ -1,6 +1,7 @@
 package com.grupomateus.supermarket.dto;
 
 import com.grupomateus.supermarket.model.PaymentMethod;
+import java.math.BigDecimal;
 
 public record CreateOrderRequest(
         String recipientName,
@@ -20,7 +21,12 @@ public record CreateOrderRequest(
         Integer installments,
 
         ShippingAddressDto shippingAddress,
-        CreditCardDto cardData
+        CreditCardDto cardData,
+
+        String deliveryType,
+        BigDecimal deliveryFee,
+        BigDecimal discountAmount,
+        String couponCode
 ) {
     public CreateOrderRequest(
             String recipientName,
@@ -39,13 +45,35 @@ public record CreateOrderRequest(
     ) {
         this(recipientName, street, number, neighborhood, city, state, cep,
              paymentMethod, creditCardNumber, creditCardHolder, creditCardExpiry,
-             creditCardCvv, installments, null, null);
+             creditCardCvv, installments, null, null, null, null, null, null);
+    }
+
+    public CreateOrderRequest(
+            String recipientName,
+            String street,
+            String number,
+            String neighborhood,
+            String city,
+            String state,
+            String cep,
+            PaymentMethod paymentMethod,
+            String creditCardNumber,
+            String creditCardHolder,
+            String creditCardExpiry,
+            String creditCardCvv,
+            Integer installments,
+            ShippingAddressDto shippingAddress,
+            CreditCardDto cardData
+    ) {
+        this(recipientName, street, number, neighborhood, city, state, cep,
+             paymentMethod, creditCardNumber, creditCardHolder, creditCardExpiry,
+             creditCardCvv, installments, shippingAddress, cardData, null, null, null, null);
     }
 
     public CreateOrderRequest(ShippingAddressDto shippingAddress, PaymentMethod paymentMethod, CreditCardDto cardData) {
         this(null, null, null, null, null, null, null,
              paymentMethod, null, null, null, null, null,
-             shippingAddress, cardData);
+             shippingAddress, cardData, null, null, null, null);
     }
     public String getEffectiveRecipientName() {
         if (shippingAddress != null && shippingAddress.recipientName() != null) {

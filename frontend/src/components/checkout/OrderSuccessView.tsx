@@ -195,6 +195,13 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
               <span>{deliveryFee === 0 ? 'GRÁTIS' : formatCurrency(deliveryFee)}</span>
             </div>
 
+            {(order.discountAmount ?? 0) > 0 && (
+              <div className="flex justify-between text-emerald-700 text-[11px] font-bold">
+                <span>Desconto {order.couponCode ? `(${order.couponCode})` : '(Cupom)'}:</span>
+                <span>-{formatCurrency(order.discountAmount!)}</span>
+              </div>
+            )}
+
             <div className="flex justify-between text-slate-900 font-black text-sm pt-1 border-t border-slate-200">
               <span>Total Pago:</span>
               <span className="text-mateus-blue">{formatCurrency(totalAmount)}</span>

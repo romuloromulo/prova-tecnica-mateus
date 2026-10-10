@@ -218,6 +218,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
         shippingAddress,
         paymentMethod,
         cardData: paymentMethod === 'CARTAO_CREDITO' ? cardData : undefined,
+        deliveryType,
+        deliveryFee,
+        discountAmount,
+        couponCode: appliedCoupon?.code,
+        totalAmount,
       });
 
       if (paymentMethod === 'PIX') {
@@ -266,7 +271,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
     await new Promise((resolve) => setTimeout(resolve, 600));
 
     const updated = await orderService.simulatePayment({
-      orderId: pixPendingOrder.id,
+      orderId: pixPendingOrder.orderNumber || String(pixPendingOrder.id),
       simulateStatus: 'APPROVED',
     });
 
@@ -287,7 +292,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBackToStore }) => 
     await new Promise((resolve) => setTimeout(resolve, 400));
 
     await orderService.simulatePayment({
-      orderId: pixPendingOrder.id,
+      orderId: pixPendingOrder.orderNumber || String(pixPendingOrder.id),
       simulateStatus: 'REJECTED',
       rejectionReason: 'Pagamento PIX expirado.',
     });

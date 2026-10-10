@@ -48,6 +48,9 @@ export interface Order {
   items: CartItem[];
   subtotal: number;
   deliveryFee: number;
+  discountAmount?: number;
+  couponCode?: string;
+  deliveryType?: 'delivery' | 'pickup' | 'express';
   totalAmount: number;
   paymentMethod: PaymentMethod;
   status: OrderStatus;
@@ -63,6 +66,11 @@ export interface CreateOrderPayload {
   shippingAddress: ShippingAddress;
   paymentMethod: PaymentMethod;
   cardData?: CreditCardData;
+  deliveryType?: 'delivery' | 'pickup' | 'express';
+  deliveryFee?: number;
+  discountAmount?: number;
+  couponCode?: string;
+  totalAmount?: number;
 }
 
 export interface PaymentSimulationRequest {
