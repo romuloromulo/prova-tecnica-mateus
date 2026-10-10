@@ -11,19 +11,19 @@ export function useA11y() {
     return localStorage.getItem('a11y-high-contrast') === 'true';
   });
 
-  // Atualização em tempo real do tamanho exclusivo da FONTE (sem zoom no layout)
+  // Atualização em tempo real do tamanho da FONTE (WCAG 2.1 - 1.4.4)
   useEffect(() => {
     const root = document.documentElement;
     const body = document.body;
 
-    // Remove qualquer override inline da raiz HTML para garantir que o layout (paddings, larguras) NÃO sofra zoom
-    root.style.fontSize = '';
-
+    root.classList.remove('font-size-lg', 'font-size-xl');
     body.classList.remove('font-size-lg', 'font-size-xl');
 
     if (fontSize === 'lg') {
+      root.classList.add('font-size-lg');
       body.classList.add('font-size-lg');
     } else if (fontSize === 'xl') {
+      root.classList.add('font-size-xl');
       body.classList.add('font-size-xl');
     }
 

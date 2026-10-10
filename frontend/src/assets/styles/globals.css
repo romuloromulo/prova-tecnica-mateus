@@ -32,42 +32,30 @@
 }
 
 /* ==========================================================================
-   Acessibilidade Tipográfica: Aumento Exclusivo da Fonte (WCAG 2.1 - 1.4.4)
-   Altera ESTRITAMENTE o tamanho dos textos, títulos e números.
-   NÃO altera paddings, larguras de caixas, alturas, containers ou o layout.
+   Acessibilidade Tipográfica: Aumento Escalar da Fonte (WCAG 2.1 - 1.4.4)
+   Escala proporcionalmente 100% da tipografia da aplicação baseada em rem,
+   preservando integralmente os breakpoints responsivos (sm, md, lg, xl).
    ========================================================================== */
 
-/* Nível 1: A+ (+15% a +20% no tamanho das letras) */
+/* Nível 1: A+ (+15% a +20% no tamanho de todas as letras) */
+html.font-size-lg,
 body.font-size-lg {
-  font-size: 1.15rem;
+  font-size: 115%;
 }
-body.font-size-lg .text-\[10px\] { font-size: 12px !important; }
-body.font-size-lg .text-\[11px\] { font-size: 13px !important; }
-body.font-size-lg .text-xs { font-size: 0.9rem !important; }
-body.font-size-lg .text-sm { font-size: 1.05rem !important; }
-body.font-size-lg .text-base { font-size: 1.18rem !important; }
-body.font-size-lg .text-lg { font-size: 1.3rem !important; }
-body.font-size-lg .text-xl { font-size: 1.45rem !important; }
-body.font-size-lg .text-2xl { font-size: 1.75rem !important; }
-body.font-size-lg .text-3xl { font-size: 2.15rem !important; }
-body.font-size-lg .text-4xl { font-size: 2.6rem !important; }
-body.font-size-lg .text-5xl { font-size: 3.4rem !important; }
+html.font-size-lg :where(.text-\[10px\]),
+body.font-size-lg :where(.text-\[10px\]) { font-size: 12px; }
+html.font-size-lg :where(.text-\[11px\]),
+body.font-size-lg :where(.text-\[11px\]) { font-size: 13px; }
 
-/* Nível 2: A++ (+30% a +40% no tamanho das letras - Máximo para Dona Marta) */
+/* Nível 2: A++ (+30% a +35% no tamanho das letras - Máximo para Dona Marta) */
+html.font-size-xl,
 body.font-size-xl {
-  font-size: 1.3rem;
+  font-size: 130%;
 }
-body.font-size-xl .text-\[10px\] { font-size: 14px !important; }
-body.font-size-xl .text-\[11px\] { font-size: 15px !important; }
-body.font-size-xl .text-xs { font-size: 1.05rem !important; }
-body.font-size-xl .text-sm { font-size: 1.2rem !important; }
-body.font-size-xl .text-base { font-size: 1.35rem !important; }
-body.font-size-xl .text-lg { font-size: 1.5rem !important; }
-body.font-size-xl .text-xl { font-size: 1.65rem !important; }
-body.font-size-xl .text-2xl { font-size: 2.0rem !important; }
-body.font-size-xl .text-3xl { font-size: 2.45rem !important; }
-body.font-size-xl .text-4xl { font-size: 3.0rem !important; }
-body.font-size-xl .text-5xl { font-size: 3.8rem !important; }
+html.font-size-xl :where(.text-\[10px\]),
+body.font-size-xl :where(.text-\[10px\]) { font-size: 14px; }
+html.font-size-xl :where(.text-\[11px\]),
+body.font-size-xl :where(.text-\[11px\]) { font-size: 15px; }
 
 /* ==========================================================================
    ALTO CONTRASTE INTEGRAL (WCAG 2.1 AAA - 7:1+ a 21:1 Contrast Ratio)
